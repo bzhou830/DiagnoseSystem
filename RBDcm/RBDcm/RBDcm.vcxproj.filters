@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="xml">
+      <UniqueIdentifier>{0c7e6e43-f61c-4f2c-a4e3-cbc0218b808c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="res\RBDcm.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\RBDcmDoc.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\main.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\reset.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\mask.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\medium.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\hence.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\src.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\mean.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\cursor1.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\reset1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\hist1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\cut1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\enhance1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\medium1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\src1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\lastimg1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\nextimg1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\play1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\cursor2.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ooopic_1447731853.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ooopic_1447731861.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\mask1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\entropy1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\ostu1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\hence1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\lung1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RBDcm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RBDcmDoc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RBDcmView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SplitterWndExt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="OprtView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SetValueDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawHistDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MaskSetDlg.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="HenceDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SrcShowDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ImgFormat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ImgInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseStruct.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ImgLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IconButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MatImg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RBMermoryDC.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SegmentOperat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="EnhanceOperat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassficationOperat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaySeriesDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="xml\tinystr.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="xml\tinyxml.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SegView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassifierView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="InfoView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MySplitterWndEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SplitterExt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RBDcm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RBDcmDoc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RBDcmView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SplitterWndExt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="OprtView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MaskSetDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SetValueDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawHistDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HenceDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SrcShowDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImgFormat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImgInfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImgLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="IconButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MatImg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RBMermoryDC.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SegmentOperat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EnhanceOperat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassficationOperat.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaySeriesDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinystr.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxmlparser.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxml.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxmlerror.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Type.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SegView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassifierView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="InfoView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MySplitterWndEx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SplitterExt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RBDcm.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
