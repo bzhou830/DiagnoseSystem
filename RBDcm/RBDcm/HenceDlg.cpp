@@ -14,7 +14,6 @@ IMPLEMENT_DYNAMIC(CHenceDlg, CDialogEx)
 CHenceDlg::CHenceDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CHenceDlg::IDD, pParent)
 {
-
 }
 
 CHenceDlg::~CHenceDlg()

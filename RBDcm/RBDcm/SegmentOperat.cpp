@@ -267,6 +267,8 @@ Mat CSegmentOperat::MoMSeg(Mat src)
 	}
 	index += 10;
 	cv::threshold(src, dst, index, 255, 0);    //进行阈值分割
+	Mat  et= getStructuringElement(MORPH_ELLIPSE,cv::Size(5,5)); 
+	erode(dst, dst, et);
 	return dst.clone();
 }
 
@@ -382,3 +384,77 @@ Mat CSegmentOperat::RegionGrow(Mat src, CPoint pt, int th)
 	return matDst.clone();
 }
 
+
+/***************************************************************************************
+Function:  获取肺实质形心，便于使用区域生长
+Input:     src 待处理原图像（二值化后） 
+		   pt1 左肺形心点   pt2 右肺形心点
+Output:    void
+Description: 获取的形心点可以直接交由区域生长处理，并且可以迭代至图像下一层，整体上提高了运算速度.
+Return:    
+Others:    NULL
+***************************************************************************************/
+Mat CSegmentOperat::GetObjectCenter(Mat src,CPoint &pt1,CPoint &pt2)
+{
+	//对图像进行腐蚀减小轮廓
+	Mat  et= getStructuringElement(MORPH_ELLIPSE,cv::Size(5,5)); 
+	dilate(src, src, et);
+	Mat tmp = src.clone();
+	Mat dst(src.size(), CV_8U, cv::Scalar(255));	 
+	std::vector<std::vector<cv::Point>> contours;    //边界点集合
+	std::vector<cv::Vec4i> hierarchy;				 //边界
+	findContours(src, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	//找到最大轮廓
+	std::vector<std::vector<cv::Point>>::const_iterator itc = contours.begin();
+	UINT nSize = itc->size();
+	int cId = 0;
+	int nMaxId = 0;
+	//遍历寻找最大的的边界，最大的边界就是肺部图像
+	while (itc != contours.end())
+	{
+		if (itc->size() > nSize)
+		{
+			nSize = itc->size();
+			nMaxId = cId;
+		}
+		++itc;
+		++cId;
+	}
+	//画出最大轮廓到result，轮廓的结果是内部为黑色，外部为白色
+	drawContours(dst, contours, nMaxId, Scalar(0), CV_FILLED, 1, hierarchy);
+	bitwise_not(dst, dst);
+	cv::Mat ele(9, 9, CV_8U, cv::Scalar(1));    //9X9结构元素
+	erode(dst, dst, ele);						//对图像进行腐蚀,去掉细小的边界
+	cv::subtract(dst, tmp, dst);
+	//再次找图像边界，对图像内部进行填充
+	findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	//drawContours(dst, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
+	
+	std::vector<std::vector<cv::Point>>::const_iterator itc2 = contours.begin();
+	cId = 0;
+	while (itc2 != contours.end())
+	{
+		double area = fabs(contourArea(*itc2));
+		if (area >= 200)
+			drawContours(dst, contours, cId, Scalar(255), CV_FILLED, 1, hierarchy);
+		++itc2;
+		++cId;
+	}
+	Mat element = getStructuringElement(MORPH_ELLIPSE,cv::Size(7,7));
+	erode( dst, dst, element);
+
+	return dst.clone();
+	/*
+	//使用圆形模板进行闭运算，对细小的缺口进行修补（吹球法）
+	Mat element = getStructuringElement(MORPH_ELLIPSE,cv::Size(7,7));
+	morphologyEx( dst, dst, MORPH_CLOSE, element);
+
+	//再次找图像边界，对图像内部进行填充
+	findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	drawContours(dst, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
+
+	element = getStructuringElement(MORPH_ELLIPSE,cv::Size(5,5));    //使用5*5原型模板进行腐蚀
+	erode(dst, dst, element);
+	*/
+	//return dst.clone();
+}

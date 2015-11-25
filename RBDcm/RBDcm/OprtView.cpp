@@ -29,7 +29,6 @@ const int  MEAN     =		15;
 const int  MOM      =		16;
 const int LOADXML   =       17;
 
-
 // COprtView
 IMPLEMENT_DYNCREATE(COprtView, CFormView)
 
@@ -47,7 +46,7 @@ COprtView::~COprtView()
 /***************************************************************************************
 Function: 控件中数值与变量数值间数值转换
 Input:    CDataExchange类指针
-Output:  void
+Output:   void
 Description: MFC内部数据转换机制
 Return:   void
 Others:   NULL
@@ -129,8 +128,6 @@ Others:   NULL
 void COprtView::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
-	//m_pRDBView = (CRBDcmView*)(((CMainFrame*)AfxGetMainWnd())->m_splt.GetPane(0, 1));
-	//m_pDoc = m_pRDBView->GetDocument();
 	m_pMainFrm = (CMainFrame*)AfxGetMainWnd();
 	m_reset.SetIcon(IDI_RESET);             //复原
 	m_btnHist.SetIcon(IDI_HIST);            //直方图
@@ -231,17 +228,10 @@ void COprtView::Executive(int msg)
 	(m_pMainFrm->m_pRBView)->Invalidate(FALSE);
 }
 
-
 //Histogram Equalization
 void COprtView::OnBnClickedBtnHist()
 {
 	Executive(HIST);
-}
-
-//threshold segmentation
-void COprtView::OnBnClickedBtnCut()
-{
-	Executive(CUT);
 }
 
 //Image data reset
@@ -250,14 +240,11 @@ void COprtView::OnBnClickedBtnRst()
 	Executive(RST);
 }
 
-
-
 //median filter
 void COprtView::OnBnClickedBtnMedian()
 {
 	Executive(MEDIAN);
 }
-
 
 //Max entropy segment
 void COprtView::OnBnClickedBtnEntropy()
@@ -514,4 +501,19 @@ void COprtView::OnBnClickedBtnVideo()
 	::CloseWindow(hWnd);
 	::DestroyWindow(hWnd);
 	cam.release();
+}
+
+
+//threshold segmentation
+void COprtView::OnBnClickedBtnCut()
+{
+	CSegmentOperat seg;
+	sOneImg img;					//肺实质窗口中的图像
+	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
+	CPoint pt1,pt2;
+	img.pixle = seg.GetObjectCenter(img.pixle,pt1,pt2);  //处理
+
+	(m_pMainFrm->m_pClassier)->SetImgData(img);
+
+	//Executive(CUT);
 }

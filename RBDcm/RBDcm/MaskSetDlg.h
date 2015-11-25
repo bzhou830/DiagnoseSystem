@@ -1,6 +1,5 @@
 #pragma once
 
-
 //变换核结构体
 struct Maskmatrix
 {

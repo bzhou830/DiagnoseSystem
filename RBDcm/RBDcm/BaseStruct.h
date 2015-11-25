@@ -15,8 +15,9 @@
 #include <cv.hpp>
 #include <opencv2/opencv.hpp>
 #include <core/core.hpp>
+#include <list>
 using namespace cv;				    //opencv namespace 
-
+using namespace std;
 
 //图像层类型定义 m_nType
 #define IMG_LAYER             0    //图像数据层类型号
@@ -84,7 +85,7 @@ struct NodulePoint
 struct SingleImgNodule
 {
 	int index;
-	vector<NodulePoint> vcNodulePoint;
+	list<NodulePoint> vcNodulePoint;
 	double ZPosition;
 };
 

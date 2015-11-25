@@ -12,7 +12,6 @@
 #include "afxtempl.h"
 #include <vector>
 #include "MatImg.h"
-//#include "OprtView.h"   在此包含会出错
 #include "ImgLayer.h"
 #include "PlaySeriesDlg.h"
 #include "SegmentOperat.h"

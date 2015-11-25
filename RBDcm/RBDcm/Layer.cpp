@@ -6,7 +6,6 @@
 
 CLayer::CLayer(void)
 {
-
 }
 
 

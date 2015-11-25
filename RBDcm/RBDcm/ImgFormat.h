@@ -19,5 +19,6 @@ public:
 	~CImgFormat(void);
 public:
 	static void Mat2CImage(Mat &mat, CImage &img);   //将Mat数据转换成MFC适合显示的数据
+	
 };
 

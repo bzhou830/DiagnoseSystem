@@ -8,8 +8,8 @@
 ***********************************************************************************/
 #include "stdafx.h"
 #include "RBDcm.h"
-
 #include "MainFrm.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

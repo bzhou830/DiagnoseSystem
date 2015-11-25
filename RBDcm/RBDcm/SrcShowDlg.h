@@ -24,3 +24,5 @@ public:
 	void SetImgData(Mat srcImg);
 	afx_msg void OnPaint();
 };
+
+

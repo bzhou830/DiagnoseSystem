@@ -13,7 +13,6 @@ CImgFormat::CImgFormat(void)
 {
 }
 
-
 CImgFormat::~CImgFormat(void)
 {
 }

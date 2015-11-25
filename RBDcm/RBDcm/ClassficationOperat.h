@@ -13,6 +13,5 @@ class CClassficationOperat
 public:
 	CClassficationOperat(void);
 	~CClassficationOperat(void);
-
 };
 

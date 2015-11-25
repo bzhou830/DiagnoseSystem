@@ -13,12 +13,11 @@
 class CDrawHistDlg : public CDialog
 {
 	DECLARE_DYNAMIC(CDrawHistDlg)
-
 public:
-	CDrawHistDlg(CWnd* pParent = NULL);   // 标准构造函数
+	CDrawHistDlg(CWnd* pParent = NULL);   				// 标准构造函数
 	virtual ~CDrawHistDlg();
-// 对话框数据
-	enum { IDD = IDD_HIST_DLG };
+
+	enum { IDD = IDD_HIST_DLG };  						// 对话框数据
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 

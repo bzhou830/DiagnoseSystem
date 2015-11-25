@@ -1,12 +1,10 @@
 // SplitterWndEx.cpp : 实现文件
-//
 
 #include "stdafx.h"
 #include "MySplitterWndEx.h"
 
 
 // CSplitterWndEx
-
 IMPLEMENT_DYNAMIC(CMySplitterWndEx, CSplitterWnd)
 
 CMySplitterWndEx::CMySplitterWndEx()

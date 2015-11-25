@@ -10,7 +10,6 @@
 #include "layer.h"
 #include "Type.h"
 
-
 class CImgInfoLayer : public CLayer
 {
 private:

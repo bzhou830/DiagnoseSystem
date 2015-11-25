@@ -1,8 +1,6 @@
 #pragma once
 
-
 // CSplitterWndEx
-
 class CMySplitterWndEx : public CSplitterWnd
 {
 	DECLARE_DYNAMIC(CMySplitterWndEx)

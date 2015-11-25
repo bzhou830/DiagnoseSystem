@@ -42,7 +42,7 @@ void CIconButton::DrawItem(LPDRAWITEMSTRUCT lpDIS)
 	rt.right = n;
 	rt.DeflateRect((n-20)/2, 4);
 	::DrawIconEx(dc.GetSafeHdc(), rt.left, rt.top, m_hIcon, 20, 20, 0, 0, DI_NORMAL);
-	//Draw Text
+
 	rt.CopyRect(rc);
 	//rt.left += 24;
 	rc.bottom += 24;

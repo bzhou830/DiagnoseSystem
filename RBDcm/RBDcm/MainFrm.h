@@ -6,7 +6,6 @@
                MFC structure
   Others:         
 ***********************************************************************************/
-
 #pragma once
 
 #include "RBDcmView.h"

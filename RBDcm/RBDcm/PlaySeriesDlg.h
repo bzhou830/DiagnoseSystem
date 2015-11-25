@@ -24,13 +24,13 @@ public:
 // 对话框数据
 	enum { IDD = IDD_PLAY_SERI };
 private:
-	vector<sOneImg>::iterator itr_bg;					//传入的序列迭代器
-	vector<sOneImg>::iterator itr;						//该类中使用可移动的迭代器
+	list<sOneImg>::iterator itr_bg;					//传入的序列迭代器
+	list<sOneImg>::iterator itr;						//该类中使用可移动的迭代器
 	int m_count;										//序列总图像数
 	int m_CurNum;
 public:
 	BOOL isPlay;										//是否播放序列标志
-	void SetImgSerial(vector<sOneImg>::iterator itr,
+	void SetImgSerial(list<sOneImg>::iterator itr,
 		              int count=10);					//设置图像序列迭代器和序列的总张数
 
 protected:

@@ -17,8 +17,6 @@
 #include "Type.h"
 
 
-
-
 class CImgSerial
 {
 public:
@@ -37,7 +35,7 @@ public:
 	sOneImg Dcm2MatGroup(CString lpszPathName);		//重载构造函数
 	void Clear();									//清理m_vMatGroup内的数据
 	sOneImg GetCurrentMatImg();						//获取当前迭代器所指图像数据
-	vector<sOneImg>::iterator GetBegin();			//图像序列首图像迭代器位置
+	list<sOneImg>::iterator GetBegin();			//图像序列首图像迭代器位置
 	sOneImg NextMatImg();							//迭代器后移，获取下一张图像
 	sOneImg LastMatImg();							//迭代器前移，获取上一张图像
 	int GetImageNum();								//获取当前序列图像总数
@@ -46,8 +44,8 @@ public:
 	BOOL LoadXml(CString lpszPathName);				//加载xml文件
 
 private:
-	vector<sOneImg> m_vImgSerial;					//图像数据序列
-	vector<sOneImg>::iterator m_itr;					//指向图像数据序列的迭代器
+	list<sOneImg> m_vImgSerial;					//图像数据序列
+	list<sOneImg>::iterator m_itr;					//指向图像数据序列的迭代器
 	int m_index;									//迭代器处于序列中的索引号
 };
 
@@ -116,9 +114,9 @@ Description:
 Return:   
 Others:   NULL
 ***************************************************************************************/
-inline vector<sOneImg>::iterator CImgSerial::GetBegin()
+inline list<sOneImg>::iterator CImgSerial::GetBegin()
 {
-	vector<sOneImg>::iterator ir = m_vImgSerial.begin();
+	list<sOneImg>::iterator ir = m_vImgSerial.begin();
 	return ir;
 }
 

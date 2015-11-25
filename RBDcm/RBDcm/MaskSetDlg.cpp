@@ -4,7 +4,6 @@
 #include "MaskSetDlg.h"
 #include "afxdialogex.h"
 
-
 // CMaskSetDlg ¶Ô»°¿ò
 IMPLEMENT_DYNAMIC(CMaskSetDlg, CDialog)
 

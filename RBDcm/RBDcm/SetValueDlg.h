@@ -26,3 +26,5 @@ public:
 	virtual BOOL OnInitDialog();     //窗口初始化
 	void SetValue(int vl);			 //设置窗口中edit控件数值
 };
+
+

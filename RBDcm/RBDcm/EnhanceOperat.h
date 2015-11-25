@@ -17,3 +17,5 @@ public:
 	static Mat HessianEnhance(Mat src, int nLeverL, int nLeverR);
 };
 
+
+

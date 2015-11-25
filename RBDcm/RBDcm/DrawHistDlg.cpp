@@ -26,6 +26,7 @@ CDrawHistDlg::CDrawHistDlg(CWnd* pParent /*=NULL*/)
 
 CDrawHistDlg::~CDrawHistDlg()
 {
+	
 }
 
 void CDrawHistDlg::DoDataExchange(CDataExchange* pDX)

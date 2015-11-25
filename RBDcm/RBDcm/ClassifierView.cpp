@@ -5,7 +5,6 @@
 
 
 // CClassifierView
-
 IMPLEMENT_DYNCREATE(CClassifierView, CView)
 
 CClassifierView::CClassifierView()

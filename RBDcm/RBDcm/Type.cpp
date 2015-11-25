@@ -50,7 +50,6 @@ double CType::CString2Double(CString str)
 }
 
 
-
 CString CType::double2CString(double num)
 {
 	CString str;

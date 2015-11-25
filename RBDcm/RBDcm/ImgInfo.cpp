@@ -9,10 +9,8 @@
 #include "StdAfx.h"
 #include "ImgInfo.h"
 
-
 CImgInfoLayer::CImgInfoLayer(void)
 {
-	//memset(&m_info, 0, sizeof(m_info));
 	isEmpty = TRUE;
 }
 

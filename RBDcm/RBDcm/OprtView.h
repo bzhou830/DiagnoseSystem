@@ -79,8 +79,6 @@ public:
 	void Executive(int msg);
 	int m_nSUM;
 	int m_nCurrent;
-	//CRBDcmView* m_pRDBView;
-	//CRBDcmDoc* m_pDoc;
 	void SetSum(int num);
 	void SetCurrent(int num);
 	afx_msg void OnBnClickedBtnNext();

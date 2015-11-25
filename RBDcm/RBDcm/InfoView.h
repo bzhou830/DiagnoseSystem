@@ -8,7 +8,6 @@ class CInfoView : public CListView
 	DECLARE_DYNCREATE(CInfoView)
 public:
 	sOneImg img;
-
 protected:
 	CInfoView();           // 动态创建所使用的受保护的构造函数
 	virtual ~CInfoView();

@@ -91,3 +91,5 @@ void CSetValueDlg::SetValue(int vl)
 {
 	m_value = vl;
 }
+
+

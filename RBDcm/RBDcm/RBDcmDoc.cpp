@@ -125,7 +125,6 @@ void CRBDcmDoc::SetSearchContent(const CString& value)
 		}
 	}
 }
-
 #endif // SHARED_HANDLERS
 
 // CRBDcmDoc 诊断

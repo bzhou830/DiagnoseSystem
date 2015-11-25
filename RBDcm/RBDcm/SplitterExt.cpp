@@ -25,12 +25,7 @@ BEGIN_MESSAGE_MAP(CSplitterExt, CWnd)
 	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
-
-
 // CSplitterExt 消息处理程序
-
-
-
 
 void CSplitterExt::OnMouseMove(UINT nFlags, CPoint point)
 {

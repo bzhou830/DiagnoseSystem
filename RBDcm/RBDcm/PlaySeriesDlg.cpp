@@ -51,7 +51,7 @@ void CPlaySeriesDlg::PostNcDestroy()
 }
 
 
-void CPlaySeriesDlg::SetImgSerial(vector<sOneImg>::iterator itr,int count)
+void CPlaySeriesDlg::SetImgSerial(list<sOneImg>::iterator itr,int count)
 {
 	this->itr_bg = itr;
 	this->itr = itr_bg;

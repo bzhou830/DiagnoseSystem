@@ -5,7 +5,6 @@
   Description: image pixles data layer class 
   Others:         
 ***********************************************************************************/
-
 #pragma once
 #include "layer.h"
 #include "BaseStruct.h"

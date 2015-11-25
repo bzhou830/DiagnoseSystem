@@ -147,6 +147,7 @@ void CRBDcmView::OnLButtonDown(UINT nFlags, CPoint point)
 	CView::OnLButtonDown(nFlags, point);
 }
 
+
 /***************************************************************************************
 Function: 视图界面下抬起鼠标左键消息响应
 Input:    

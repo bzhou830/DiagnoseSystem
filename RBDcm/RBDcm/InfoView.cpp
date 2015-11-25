@@ -70,21 +70,23 @@ void CInfoView::SetImgData(sOneImg src)
 
 void CInfoView::ShowData(void)
 {
-	CListCtrl& list = GetListCtrl();
-	list.DeleteAllItems();
+	CListCtrl& listctr = GetListCtrl();
+	listctr.DeleteAllItems();
 	int size = img.SingleNodules.vcNodulePoint.size();
 	for (int i=0; i<size; ++i)
 	{
-		int index = list.InsertItem(i, CType::int2CString(i));
-		list.SetItemText(index, 1, CType::double2CString(img.SingleNodules.ZPosition));
-		NodulePoint pt = img.SingleNodules.vcNodulePoint.at(i);
+		int index = listctr.InsertItem(i, CType::int2CString(i));
+		listctr.SetItemText(index, 1, CType::double2CString(img.SingleNodules.ZPosition));
+		list<NodulePoint>::iterator itr = img.SingleNodules.vcNodulePoint.begin();
+		std::advance(itr,i);
+		NodulePoint pt = *itr;
 		CString str;
 		str.Format("(%d£¬%d)", pt.x, pt.y);
-		list.SetItemText(index, 2, str);
+		listctr.SetItemText(index, 2, str);
 		if (pt.nt == NONENODULE)
-			list.SetItemText(index, 3, "FALSE");
+			listctr.SetItemText(index, 3, "FALSE");
 		else if(pt.nt == ISNODULE)
-			list.SetItemText(index, 3, "TRUE");
+			listctr.SetItemText(index, 3, "TRUE");
 	}
 }
 

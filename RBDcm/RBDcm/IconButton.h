@@ -6,7 +6,6 @@
   Others:         
 ***********************************************************************************/
 #pragma once
-
 #include "afxwin.h"
 
 class CIconButton : public CButton

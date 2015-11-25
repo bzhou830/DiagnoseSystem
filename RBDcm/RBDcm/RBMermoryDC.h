@@ -45,7 +45,7 @@ public:
 	BOOL DeleteDC();
 	void BitRgn(CRgn &rgn, COLORREF crTrans);
 	void BitTrans(int nXDst,int nYDst, int nWidth, int nHeight, CDC *pDC, int nXSrc, int nYSrc, COLORREF crTrans);
-
+	
 public:
 	inline int Width(){      //获取内存DC宽度
 		return m_size.cx;

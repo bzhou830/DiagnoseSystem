@@ -16,11 +16,9 @@ CImgDataLayer::CImgDataLayer(void)
 	m_SumTimes = 1.0;
 }
 
-
 CImgDataLayer::~CImgDataLayer(void)
 {
 }
-
 
 /***************************************************************************************
 Function: Í¼ÏñÊý¾Ý²ã»æÖÆ

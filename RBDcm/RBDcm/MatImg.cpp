@@ -35,10 +35,9 @@ BOOL CImgSerial::LoadDcm(CString lpszPathName)
 {
 	sOneImg mg = Dcm2MatGroup(lpszPathName);	//图像进行转换
 	m_vImgSerial.push_back(mg);					//将一张图的数据添加到序列中
-	m_itr = m_vImgSerial.begin();					//指定迭代器itr指向序列的开头
+	m_itr = m_vImgSerial.begin();				//指定迭代器itr指向序列的开头
 	return TRUE;
 }
-
 
 
 /***************************************************************************************
@@ -113,9 +112,8 @@ Others:   NULL
 ***************************************************************************************/
 sOneImg CImgSerial::NextMatImg()
 {
-	if ((m_itr+1) != m_vImgSerial.end())   
+	if (++m_itr != m_vImgSerial.end())   
 	{
-		++m_itr;
 		++m_index;			//图像张数递加
 		return *m_itr;
 	}
@@ -162,7 +160,7 @@ Others:   NULL
 ***************************************************************************************/
 BOOL CImgSerial::LoadXml(CString lpszPathName)
 {
-	vector<SingleImgNodule> vcSingle;
+	list<SingleImgNodule> vcSingle;
 	const char* pFile = (LPSTR)(LPCTSTR)lpszPathName;
 	TiXmlDocument doc(pFile);
 	BOOL loadOK = doc.LoadFile();
@@ -239,12 +237,12 @@ BOOL CImgSerial::LoadXml(CString lpszPathName)
 	}
 
 	//解析完成则将信息转存到序列表中
-	vector<sOneImg>::iterator itr = m_vImgSerial.begin();
+	list<sOneImg>::iterator itr = m_vImgSerial.begin();
 	int count = 1;
 	for (;itr != m_vImgSerial.end(); ++count)
 	{
 		double dbTmp = itr->info.nPositionZ;
-		vector<SingleImgNodule>::iterator itrSg = vcSingle.begin();        //xml解析信息
+		list<SingleImgNodule>::iterator itrSg = vcSingle.begin();        //xml解析信息
  		for (; itrSg != vcSingle.end(); ++itrSg)						   //在解析的表中查找匹配项，然后导入
 		{
 			double tmp = itrSg->ZPosition;
@@ -259,7 +257,7 @@ BOOL CImgSerial::LoadXml(CString lpszPathName)
 			//itrSg->index = count;
 			itr->SingleNodules.ZPosition = itrSg->ZPosition;
 			//结节点信息转存到存储区中
-			vector<NodulePoint>::iterator itrSrc = itrSg->vcNodulePoint.begin();
+			list<NodulePoint>::iterator itrSrc = itrSg->vcNodulePoint.begin();
 			for (; itrSrc!=itrSg->vcNodulePoint.end(); ++itrSrc)
 			{
 				try

@@ -11,6 +11,7 @@ class CClassifierView : public CView
 public:
 	sOneImg m_sOneImgShow;				//showing image
 	CArray <CLayer*, CLayer*> m_ls;     //interface layers 
+	
 protected:
 	CClassifierView();					// 动态创建所使用的受保护的构造函数
 	virtual ~CClassifierView();

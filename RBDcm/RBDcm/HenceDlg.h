@@ -16,8 +16,8 @@ public:
 	CHenceDlg(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CHenceDlg();
 
-// 对话框数据
-	enum { IDD = IDD_DLG_HENCE };
+
+	enum { IDD = IDD_DLG_HENCE };	// 对话框数据
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持

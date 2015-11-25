@@ -117,6 +117,7 @@ int CRBDcmApp::ExitInstance()
 	return CWinApp::ExitInstance();
 }
 
+
 // CRBDcmApp 消息处理程序
 
 

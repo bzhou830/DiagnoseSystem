@@ -22,7 +22,6 @@ void CSplitterWndExt::OnLButtonDown(UINT nFlags, CPoint point)
 	//CSplitterWnd::OnLButtonDown(nFlags, point);
 }
 
-
 void CSplitterWndExt::OnMouseMove(UINT nFlags, CPoint point)
 {
 	//CSplitterWnd::OnMouseMove(nFlags, point);

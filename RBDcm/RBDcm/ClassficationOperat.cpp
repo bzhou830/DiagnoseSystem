@@ -11,9 +11,11 @@
 
 CClassficationOperat::CClassficationOperat(void)
 {
+	
 }
 
 
 CClassficationOperat::~CClassficationOperat(void)
 {
+	
 }

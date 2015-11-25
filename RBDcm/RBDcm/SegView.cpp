@@ -16,7 +16,6 @@ CSegView::CSegView()
 	m_ls.Add(pLayer);
 }
 
-
 CSegView::~CSegView()
 {
 }

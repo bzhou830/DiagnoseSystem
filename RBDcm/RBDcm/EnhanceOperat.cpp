@@ -8,16 +8,13 @@
 #include "StdAfx.h"
 #include "EnhanceOperat.h"
 
-
 CEnhanceOperat::CEnhanceOperat(void)
 {
 }
 
-
 CEnhanceOperat::~CEnhanceOperat(void)
 {
 }
-
 
 /***************************************************************************************
 Function: 多尺度汉森矩阵增强
