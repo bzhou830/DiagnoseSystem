@@ -1,10 +1,12 @@
 // SplitterWndEx.cpp : 实现文件
+//
 
 #include "stdafx.h"
 #include "MySplitterWndEx.h"
 
 
 // CSplitterWndEx
+
 IMPLEMENT_DYNAMIC(CMySplitterWndEx, CSplitterWnd)
 
 CMySplitterWndEx::CMySplitterWndEx()
@@ -54,8 +56,10 @@ void CMySplitterWndEx::OnDrawSplitter(CDC* pDC, ESplitType nType, const CRect& r
 	if (pDC != NULL)
 	{
 		CBrush  brush;
-		brush.CreateSolidBrush(GetSysColor(COLOR_HIGHLIGHT));
+		brush.CreateSolidBrush(RGB(200,200,200));
 		//pDC->SelectObject(&brush);
 		pDC->FillRect(&rect,&brush);
 	}
 }
+
+

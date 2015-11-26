@@ -147,7 +147,6 @@ void CRBDcmView::OnLButtonDown(UINT nFlags, CPoint point)
 	CView::OnLButtonDown(nFlags, point);
 }
 
-
 /***************************************************************************************
 Function: 视图界面下抬起鼠标左键消息响应
 Input:    
@@ -321,13 +320,10 @@ void CRBDcmView::OnRButtonDown(UINT nFlags, CPoint point)
 	CView::OnRButtonDown(nFlags, point);*/
 }
 
-
+//右键菜单
 void CRBDcmView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	CMenu menu;
 	menu.LoadMenu(IDR_POPUP);
 	menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RIGHTBUTTON, point.x, point.y, this);
-	//CMenu* pMenu = menu.GetSubMenu(0);
-	//ClientToScreen(&point);
-	//pMenu->TrackPopupMenu(TPM_LEFTALIGN, point.x, point.y, pWnd);
 }

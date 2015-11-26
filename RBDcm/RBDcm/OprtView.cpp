@@ -29,6 +29,7 @@ const int  MEAN     =		15;
 const int  MOM      =		16;
 const int LOADXML   =       17;
 
+
 // COprtView
 IMPLEMENT_DYNCREATE(COprtView, CFormView)
 
@@ -324,7 +325,6 @@ void COprtView::OnSerile()
 	SetCurrent(m_ImgSerial.GetCurrentNum());			//显示当前图像序号
 	sOneImg info = m_ImgSerial.GetCurrentMatImg();		//取得当前图像
 	(m_pMainFrm->m_pRBView)->SetImgData(info);			//将图像设置到CRBDcm类中
-	//(((CMainFrame*)AfxGetMainWnd())->m_pRBView)->SetImgData(info);	//将图像设置到CRBDcm类中
 }
 
 
@@ -407,10 +407,7 @@ void COprtView::OnBnClickedBtnNext()
 {
 	sOneImg img = m_ImgSerial.NextMatImg();
 	(m_pMainFrm->m_pRBView)->SetImgData(img);
-	if (img.SingleNodules.vcNodulePoint.size() > 0)
-		(m_pMainFrm->m_pInfoView)->SetImgData(img);
-	else
-		(m_pMainFrm->m_pInfoView)->DeleteAll();
+	(m_pMainFrm->m_pInfoView)->SetImgData(img);
 	SetCurrent(m_ImgSerial.GetCurrentNum());
 }
 
@@ -462,7 +459,6 @@ void COprtView::OnBnClickedBtnMask()
 			dlg.m_mask.mk[2][0], dlg.m_mask.mk[2][1], dlg.m_mask.mk[2][2]);
 	}
 	filter2D(m_ImgSerial.GetCurrentMatImg().pixle.clone(), dst, 8, kernal);
-	//(m_pMainFrm->m_pSegView)->SegRealLung(m_ImgSerial.GetCurrentMatImg().pixle.clone());
 }
 
 

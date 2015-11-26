@@ -6,6 +6,7 @@
                MFC structure
   Others:         
 ***********************************************************************************/
+
 #pragma once
 
 #include "RBDcmView.h"
@@ -18,6 +19,7 @@
 
 const UINT UM_PROSSESS = WM_USER + 1;
 class COprtView;
+//class CSplitterWndExt;
 
 class CMainFrame : public CFrameWnd
 {
@@ -30,6 +32,7 @@ public:
 	CSegView*			m_pSegView;			//右上图像显示窗口
 	CClassifierView*	m_pClassier;		//左下图像显示窗口
 	CInfoView*			m_pInfoView;		//右下图像显示窗口
+	BOOL                m_isLeftPaneMin;    //左边面板是否被收缩
 protected: // 仅从序列化创建
 	CMainFrame();
 	DECLARE_DYNCREATE(CMainFrame)

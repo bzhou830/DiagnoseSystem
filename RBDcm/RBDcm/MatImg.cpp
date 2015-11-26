@@ -34,10 +34,12 @@ Others:   NULL
 BOOL CImgSerial::LoadDcm(CString lpszPathName)
 {
 	sOneImg mg = Dcm2MatGroup(lpszPathName);	//图像进行转换
+	mg.pSingleNodules = NULL;					//图像加载的时候结节信息全部清零
 	m_vImgSerial.push_back(mg);					//将一张图的数据添加到序列中
 	m_itr = m_vImgSerial.begin();				//指定迭代器itr指向序列的开头
 	return TRUE;
 }
+
 
 
 /***************************************************************************************
@@ -160,33 +162,34 @@ Others:   NULL
 ***************************************************************************************/
 BOOL CImgSerial::LoadXml(CString lpszPathName)
 {
-	list<SingleImgNodule> vcSingle;
-	const char* pFile = (LPSTR)(LPCTSTR)lpszPathName;
-	TiXmlDocument doc(pFile);
-	BOOL loadOK = doc.LoadFile();
-	if (!loadOK)
+	const char* pFile = (LPSTR)(LPCTSTR)lpszPathName;						//XML文件路径
+	m_vSingle.clear();														//加载前先清除信息
+	TiXmlDocument doc(pFile);												//创建读取XML临时对象
+	BOOL loadOK = doc.LoadFile();											//加载XML文件
+	if (!loadOK)															//加载失败弹出提示并退出该函数
 	{
 		MessageBox(NULL, "xml文件读取失败！", "RBDcm提示您", MB_OK);
 		return FALSE;
 	}
 
-	TiXmlElement* root = doc.RootElement();
-	for (TiXmlNode* SpecialistItem = root->FirstChild("readingSession"); SpecialistItem; SpecialistItem = SpecialistItem->NextSibling("readingSession"))
-	{   //放射专家循环
+	TiXmlElement* root = doc.RootElement();									//XML的根节点
+	for (TiXmlNode* SpecialistItem = root->FirstChild("readingSession");    //对readingSession节点进行循环
+		SpecialistItem; SpecialistItem = SpecialistItem->NextSibling("readingSession"))
+	{   
 		TiXmlNode* unblindedReadNodule = SpecialistItem->FirstChild("unblindedReadNodule");		//结节
 		TiXmlNode* nonNodule = SpecialistItem->FirstChild("nonNodule");							//非结节
 
-		while (unblindedReadNodule)																//结节循环
+		while (unblindedReadNodule)								//节点unblindedReadNodule循环
 		{
 			TiXmlNode* roi = unblindedReadNodule->FirstChild("roi");
-			while (roi)
+			while (roi)											//节点roi循环
 			{
 				SingleImgNodule single;
-				TiXmlNode* imageZposition = roi->FirstChild("imageZposition");					//获取到了新的节点
-				const char* Zposition = imageZposition->ToElement()->GetText();
-				single.ZPosition = CType::pChar2Double(Zposition);
-				TiXmlNode* edgeMap = roi->FirstChild("edgeMap");
-				while (edgeMap)
+				TiXmlNode* imageZposition = roi->FirstChild("imageZposition");	 //imageZposition信息
+				const char* Zposition = imageZposition->ToElement()->GetText();  
+				single.ZPosition = CType::pChar2Double(Zposition); 
+				TiXmlNode* edgeMap = roi->FirstChild("edgeMap"); 
+				while (edgeMap)													//edgeMap节点循环
 				{
 					TiXmlNode* xCoord = edgeMap->FirstChild("xCoord");
 					TiXmlNode* yCoord = edgeMap->FirstChild("yCoord");
@@ -199,7 +202,7 @@ BOOL CImgSerial::LoadXml(CString lpszPathName)
 					single.vcNodulePoint.push_back(pt);
 					edgeMap = edgeMap->NextSibling("edgeMap");
 				}
-				vcSingle.push_back(single);
+				m_vSingle.push_back(single);
 				roi = roi->NextSibling("roi");
 			}
 			unblindedReadNodule = unblindedReadNodule->NextSibling("unblindedReadNodule");
@@ -229,47 +232,30 @@ BOOL CImgSerial::LoadXml(CString lpszPathName)
 					edgeMap = edgeMap->NextSibling("edgeMap");
 				}
 				//存放到序列中
-				vcSingle.push_back(single);
+				m_vSingle.push_back(single);
 				roi = roi->NextSibling("roi");
 			}
 			nonNodule = nonNodule->NextSibling("nonNodule");
 		}
 	}
 
-	//解析完成则将信息转存到序列表中
+	//解析完成的信息与原数据进行关联
 	list<sOneImg>::iterator itr = m_vImgSerial.begin();
 	int count = 1;
 	for (;itr != m_vImgSerial.end(); ++count)
 	{
 		double dbTmp = itr->info.nPositionZ;
-		list<SingleImgNodule>::iterator itrSg = vcSingle.begin();        //xml解析信息
- 		for (; itrSg != vcSingle.end(); ++itrSg)						   //在解析的表中查找匹配项，然后导入
+		list<SingleImgNodule>::iterator itrSg = m_vSingle.begin();        //xml解析信息
+ 		for (; itrSg != m_vSingle.end(); ++itrSg)						   //在解析的表中查找匹配项，然后导入
 		{
 			double tmp = itrSg->ZPosition;
 			if (fabs(tmp - dbTmp) > 0.1)
 			{
-				itr->SingleNodules.ZPosition = -30.0;					   //没有结节信息则设置为-30.0
-				++itrSg;
+				itr->pSingleNodules = NULL;		//没有相关信息时则清空指针
 				++count;
-				//itrSg->index = 0;
 				continue;
 			}
-			//itrSg->index = count;
-			itr->SingleNodules.ZPosition = itrSg->ZPosition;
-			//结节点信息转存到存储区中
-			list<NodulePoint>::iterator itrSrc = itrSg->vcNodulePoint.begin();
-			for (; itrSrc!=itrSg->vcNodulePoint.end(); ++itrSrc)
-			{
-				try
-				{
-					itr->SingleNodules.vcNodulePoint.push_back(*itrSrc);
-				}
-				catch (CException* e)
-				{
-					MessageBox(NULL,"插入数据时内存分配不足！","RBDcm提示您",MB_OK);
-				}
-				
-			}
+			itr->pSingleNodules = &(*itrSg);   //如果写入了结节信息，直接结束本轮查询
 			break;
 		}
 		++itr;

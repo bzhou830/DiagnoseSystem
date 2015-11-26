@@ -8,6 +8,7 @@
 
 #pragma once
 
+//分类器类
 class CClassficationOperat
 {
 public:

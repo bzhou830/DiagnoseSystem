@@ -1,5 +1,4 @@
 // InfoView.cpp : 实现文件
-//
 #include "stdafx.h"
 #include "RBDcm.h"
 #include "InfoView.h"
@@ -21,7 +20,6 @@ END_MESSAGE_MAP()
 
 
 // CInfoView 诊断
-
 #ifdef _DEBUG
 void CInfoView::AssertValid() const
 {
@@ -63,7 +61,9 @@ void CInfoView::OnInitialUpdate()
 
 void CInfoView::SetImgData(sOneImg src)
 {
-	img.SingleNodules = src.SingleNodules;
+	img.pSingleNodules = src.pSingleNodules;
+	if (img.pSingleNodules == NULL)
+		return;
 	ShowData();
 }
 
@@ -72,12 +72,12 @@ void CInfoView::ShowData(void)
 {
 	CListCtrl& listctr = GetListCtrl();
 	listctr.DeleteAllItems();
-	int size = img.SingleNodules.vcNodulePoint.size();
+	int size = img.pSingleNodules->vcNodulePoint.size();
 	for (int i=0; i<size; ++i)
 	{
 		int index = listctr.InsertItem(i, CType::int2CString(i));
-		listctr.SetItemText(index, 1, CType::double2CString(img.SingleNodules.ZPosition));
-		list<NodulePoint>::iterator itr = img.SingleNodules.vcNodulePoint.begin();
+		listctr.SetItemText(index, 1, CType::double2CString(img.pSingleNodules->ZPosition));
+		list<NodulePoint>::iterator itr = img.pSingleNodules->vcNodulePoint.begin();
 		std::advance(itr,i);
 		NodulePoint pt = *itr;
 		CString str;

@@ -15,16 +15,19 @@
 #include <cv.hpp>
 #include <opencv2/opencv.hpp>
 #include <core/core.hpp>
+
+//STL header files
 #include <list>
 using namespace cv;				    //opencv namespace 
 using namespace std;
+
 
 //图像层类型定义 m_nType
 #define IMG_LAYER             0    //图像数据层类型号
 #define IMG_INFO_LAYER        1    //图像信息层类型号
 
 
-//图像的相关信息
+//与一张dcm图像相关的信息
 struct sOneImgInfo 
 {
 	CString sId;					//Patient ID
@@ -39,6 +42,7 @@ struct sOneImgInfo
 	double nPositionY;				//top-left position of Y
 	double nPositionZ;				//Key infomation about images
 	bool isDisplay;					//is Displayed in the screen flag
+	//对运算符 = 进行重载
 	sOneImgInfo& operator= (sOneImgInfo& vl)
 	{
 		sId = vl.sId;
@@ -57,11 +61,18 @@ struct sOneImgInfo
 	}
 };
 
+
+/**************************************************************************************
+ 结节类型
+ 1、NONENODULE 非结节
+ 2、ISNODULE   结节
+***************************************************************************************/
 enum NoduleType
 {
 	NONENODULE=0,
 	ISNODULE=1
 };
+
 
 /**************************************************************************************
  xml中结节标注点的信息
@@ -89,6 +100,7 @@ struct SingleImgNodule
 	double ZPosition;
 };
 
+
 /***************************************************************************************
 每张图像对应的信息结构：
 1、像素数据（从dcm文件中获取）
@@ -98,9 +110,9 @@ struct SingleImgNodule
 struct sOneImg
 {
 	Mat pixle;									//图像的像素数据
-	sOneImgInfo info;								//图像的附加信息
-	SingleImgNodule SingleNodules;				//单张图像结节位置信息
-	//Mat matNodule;
+	sOneImgInfo info;							//图像的附加信息
+	//单张图像结节位置信息,指向的是另一个序列的
+	SingleImgNodule* pSingleNodules;			
 };
 
 

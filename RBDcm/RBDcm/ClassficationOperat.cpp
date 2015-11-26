@@ -8,13 +8,13 @@
 #include "StdAfx.h"
 #include "ClassficationOperat.h"
 
-
+//构造函数
 CClassficationOperat::CClassficationOperat(void)
 {
 	
 }
 
-
+//析构函数
 CClassficationOperat::~CClassficationOperat(void)
 {
 	

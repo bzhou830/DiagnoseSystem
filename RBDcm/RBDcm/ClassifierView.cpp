@@ -7,6 +7,15 @@
 // CClassifierView
 IMPLEMENT_DYNCREATE(CClassifierView, CView)
 
+
+/***************************************************************************************
+Function: CClassifierView构造函数
+Input:    NULL
+Output:   BOOL
+Description: 视图类构造时创建两个图层
+Return:   NULL
+Others:   NULL
+***************************************************************************************/
 CClassifierView::CClassifierView()
 {
 	CLayer* pLayer = NULL;						//Create layers
@@ -17,15 +26,25 @@ CClassifierView::CClassifierView()
 	m_ls.Add(pLayer);
 }
 
+
 CClassifierView::~CClassifierView()
 {
 }
+
 
 BEGIN_MESSAGE_MAP(CClassifierView, CView)
 END_MESSAGE_MAP()
 
 
-// CClassifierView 绘图
+/***************************************************************************************
+Function: CClassifierView类OnDraw消息响应
+Input:    NULL
+Output:   pDC:窗口DC 
+Description: 对类自己的图层进行绘制（使用双缓冲）
+			图层来自于视图类构造时创建两个图层
+Return:   NULL
+Others:   NULL
+***************************************************************************************/
 void CClassifierView::OnDraw(CDC* pDC)
 {
 	CDocument* pDoc = GetDocument();
@@ -61,7 +80,14 @@ void CClassifierView::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 
-// CClassifierView 消息处理程序
+/***************************************************************************************
+Function: 为此类对象添加图层数据
+Input:    sOneImg 一张图像的相关信息
+Output:   void 
+Description: 传入图像数据后刷新界面，显示图层信息
+Return:   NULL
+Others:   NULL
+***************************************************************************************/
 void CClassifierView::SetImgData(sOneImg src)
 {
 	m_sOneImgShow.pixle = src.pixle.clone();
@@ -72,13 +98,26 @@ void CClassifierView::SetImgData(sOneImg src)
 }
 
 
+/***************************************************************************************
+Function: 结节分割函数响应函数
+Input:    sOneImg 一张图像的相关信息
+Output:   void 
+Description: 传入图像数据后刷新界面，显示图层信息
+Return:   NULL
+Others:   NULL
+***************************************************************************************/
 void CClassifierView::SegNodules(sOneImg src)
 {
-	CSegmentOperat seg;
-	m_sOneImgShow.info = src.info;
-	cv::Mat dst = seg.MoMSeg(src.pixle.clone());
-	m_sOneImgShow.pixle = dst.clone();
-	m_ls[0]->SetLayerImgData(m_sOneImgShow.pixle);
-	//m_ls[1]->SetLayerInfoData(m_sOneImgShow.info);
+	CSegmentOperat seg;									//创建一个分割对象
+	m_sOneImgShow.info = src.info;						//传入数据
+	cv::Mat dst = seg.MoMSeg(src.pixle.clone());		//调用分割类函数对图像进行分割
+	m_sOneImgShow.pixle = dst.clone();					//分割结构输出保存
+	
+	m_ls[0]->SetLayerImgData(m_sOneImgShow.pixle);		//设置图层信息，并且进行刷新显示
+	m_ls[1]->SetLayerInfoData(m_sOneImgShow.info);
 	Invalidate(FALSE);
 }
+
+
+
+
