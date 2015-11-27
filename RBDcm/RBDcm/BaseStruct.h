@@ -69,8 +69,8 @@ struct sOneImgInfo
 ***************************************************************************************/
 enum NoduleType
 {
-	NONENODULE=0,
-	ISNODULE=1
+	NONENODULE = 0,
+	ISNODULE = 1
 };
 
 

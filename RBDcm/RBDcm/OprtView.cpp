@@ -37,6 +37,7 @@ COprtView::COprtView()
 	: CFormView(COprtView::IDD)
 	, m_nSUM(0)
 	, m_nCurrent(0)
+	, m_PlayDlg(NULL)
 {
 }
 
@@ -96,9 +97,9 @@ BEGIN_MESSAGE_MAP(COprtView, CFormView)
 	ON_BN_CLICKED(IDC_BTN_MEAN, &COprtView::OnBnClickedBtnMean)
 	ON_BN_CLICKED(IDC_BTN_MOM, &COprtView::OnBnClickedBtnMom)
 	ON_BN_CLICKED(IDC_BTN_LOADXML, &COprtView::OnBnClickedBtnLoadxml)
-	ON_COMMAND(IDM_SERILE, &COprtView::OnSerile)
-	ON_COMMAND(ID_FILE_OPEN, &COprtView::OnFileOpen)
 	ON_COMMAND(ID_FILE_SAVE, &COprtView::OnFileSave)
+	ON_COMMAND(ID_SERILE_OPEN, &COprtView::OnSerileOpen)
+	ON_COMMAND(ID_FILE_OPEN_ONE, &COprtView::OnFileOpenOne)
 END_MESSAGE_MAP()
 
 
@@ -266,11 +267,6 @@ void COprtView::OnBnClickedBtnSrcimg()
 }
 
 
-//play image serials
-void COprtView::OnBnClickedBtnPlay()
-{
-	Executive(PLAY);
-}
 
 
 void COprtView::OnBnClickedBtnMean()
@@ -293,7 +289,7 @@ void COprtView::SetCurrent(int num)
 }
 
 
-void COprtView::OnSerile()
+void COprtView::OnSerileOpen()
 {
 	CFileDialog dlg(TRUE);								//文件打开对话框
 	CFileFind ff;										//文件查找类
@@ -328,10 +324,10 @@ void COprtView::OnSerile()
 }
 
 
-void COprtView::OnFileOpen()
+void COprtView::OnFileOpenOne()
 {
 	CFileDialog dlg(TRUE);								//文件打开对话框
-	dlg.m_ofn.lpstrTitle = "打开图像序列";				//指定打开文件对话框名称
+	dlg.m_ofn.lpstrTitle = "打开单张图像";				//指定打开文件对话框名称
 	//文件过滤器
 	dlg.m_ofn.lpstrFilter = "Dcm Files(*.dcm)\0*.dcm\0All Files(*.*)\0*.*\0\0";		
 	if (IDCANCEL == dlg.DoModal())						//弹出文件打开对话框，选择取消则直接返回
@@ -339,6 +335,8 @@ void COprtView::OnFileOpen()
 	CString strFileName = dlg.GetPathName();			//获取文件路径+文件名
 	m_ImgSerial.Clear();								//清除原有数据
 	m_ImgSerial.LoadDcm(strFileName);					//加载数据
+	SetSum(m_ImgSerial.GetImageNum());					//显示当前图像总数
+	SetCurrent(m_ImgSerial.GetCurrentNum());			//显示当前图像序号
 	sOneImg info = m_ImgSerial.GetCurrentMatImg();		//序列中当前图像
 	(m_pMainFrm->m_pRBView)->SetImgData(info);			//设置当前图像
 	//(((CMainFrame*)AfxGetMainWnd())->m_pRBView)->SetImgData(info); //设置当前图像
@@ -505,11 +503,48 @@ void COprtView::OnBnClickedBtnCut()
 {
 	CSegmentOperat seg;
 	sOneImg img;					//肺实质窗口中的图像
+	sOneImg src;                    //原始图像
+	cv::Mat dst = Mat::zeros(src.pixle.size(), CV_8UC1);
+	cv::Mat tmp = Mat::zeros(src.pixle.size(), CV_8UC1);
+	src = (m_pMainFrm->m_pOpt)->m_ImgSerial.GetCurrentMatImg();
 	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
 	CPoint pt1,pt2;
-	img.pixle = seg.GetObjectCenter(img.pixle,pt1,pt2);  //处理
+	vector<Point2i> vcPoint;
+	seg.GetObjectCenter(img.pixle,vcPoint);  //处理
+	
+	for (size_t i = 0; i < vcPoint.size(); ++i)
+	{
+		tmp = seg.RegionGrow(src.pixle, vcPoint[i], 10).clone();
+		if (i == 0)
+			dst = tmp.clone();
+		else
+			addWeighted(dst,1,tmp,1,0,dst);
+		namedWindow("aaa",CV_WINDOW_AUTOSIZE);
+		imshow("aaa",tmp);
+	}
+	img.pixle = dst.clone();
+	namedWindow("aaa",CV_WINDOW_AUTOSIZE);
+	imshow("aaa",tmp);
 
 	(m_pMainFrm->m_pClassier)->SetImgData(img);
-
-	//Executive(CUT);
 }
+
+
+//play image serials
+void COprtView::OnBnClickedBtnPlay()
+{
+	//Executive(PLAY);
+	if (m_PlayDlg != NULL)			//若对象已经存在内存中，则显示就可以了，避免创建多个对象
+	{
+		m_PlayDlg->SetImgSerial(m_ImgSerial.GetBegin(), m_ImgSerial.GetImageNum());
+		m_PlayDlg->ShowWindow(SW_NORMAL);
+		return;
+	}
+	m_PlayDlg = new CPlaySeriesDlg();
+	CRBDcmView *pView = ((CMainFrame*)AfxGetMainWnd())->m_pRBView;
+	m_PlayDlg->Create(MAKEINTRESOURCE(IDD_PLAY_SERI), pView);
+	m_PlayDlg->SetImgSerial(m_ImgSerial.GetBegin(), m_ImgSerial.GetImageNum());
+	m_PlayDlg->ShowWindow(SW_NORMAL);
+}
+
+

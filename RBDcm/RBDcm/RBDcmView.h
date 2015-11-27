@@ -42,6 +42,8 @@ public:
 #endif
 
 protected:
+
+protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
@@ -54,8 +56,10 @@ public:
 	void ReDraw(void);
 	bool isMax;
 	void SetImgData(sOneImg src);
-	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
+	afx_msg void OnMenuDrawhist();
+	afx_msg void OnMenuHistall();
+	afx_msg void OnMenuMask();
 };
 
 #ifndef _DEBUG  // RBDcmView.cpp 中的调试版本

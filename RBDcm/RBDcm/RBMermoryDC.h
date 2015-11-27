@@ -2,7 +2,7 @@
   Copyright @ Robin 2015-2025
   File name:  RBMemroyDC.h
   Author: Robin   Version: V1.0   Date: 2015.11.05 
-  Description: This class contain operation ablout CMemDC
+  Description: This class contain operation about CMemDC
   Others:         
 ***********************************************************************************/
 #ifndef __RBMEMORYDC_H
@@ -45,7 +45,7 @@ public:
 	BOOL DeleteDC();
 	void BitRgn(CRgn &rgn, COLORREF crTrans);
 	void BitTrans(int nXDst,int nYDst, int nWidth, int nHeight, CDC *pDC, int nXSrc, int nYSrc, COLORREF crTrans);
-	
+
 public:
 	inline int Width(){      //获取内存DC宽度
 		return m_size.cx;

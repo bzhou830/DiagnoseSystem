@@ -32,8 +32,10 @@ BEGIN_MESSAGE_MAP(CRBDcmView, CView)
 	ON_WM_KEYDOWN()
 	ON_WM_DESTROY()
 	ON_WM_LBUTTONDBLCLK()
-	ON_WM_RBUTTONDOWN()
 	ON_WM_CONTEXTMENU()
+	ON_COMMAND(ID_MENU_DRAWHIST, &CRBDcmView::OnMenuDrawhist)
+	ON_COMMAND(ID_MENU_HISTALL, &CRBDcmView::OnMenuHistall)
+	ON_COMMAND(ID_MENU_MASK, &CRBDcmView::OnMenuMask)
 END_MESSAGE_MAP()
 
 
@@ -310,20 +312,71 @@ void CRBDcmView::SetImgData(sOneImg src)
 }
 
 
-void CRBDcmView::OnRButtonDown(UINT nFlags, CPoint point)
-{
-	/*CMenu menu;
-	menu.LoadMenu(IDR_POPUP);
-	CMenu* pMenu = menu.GetSubMenu(0);
-	ClientToScreen(&point);
-	pMenu->TrackPopupMenu(TPM_LEFTALIGN, point.x, point.y, this);
-	CView::OnRButtonDown(nFlags, point);*/
-}
-
 //右键菜单
 void CRBDcmView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	CMenu menu;
 	menu.LoadMenu(IDR_POPUP);
 	menu.GetSubMenu(0)->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_RIGHTBUTTON, point.x, point.y, this);
+	if (m_sOneImgShow.pixle.empty())		//图像数据为空
+	{
+		menu.EnableMenuItem(ID_MENU_DRAWHIST, MF_GRAYED);
+	}
 }
+
+
+void CRBDcmView::OnMenuDrawhist()
+{
+	if (m_sOneImgShow.pixle.empty())
+	{
+		MessageBox("窗体内没有任何图像", "RBDcm提示您", MB_OK|MB_ICONWARNING);
+		return;
+	}
+	CDrawHistDlg dlg;
+	dlg.SetHistValue(m_sOneImgShow.pixle);
+	dlg.DoModal();
+}
+
+
+void CRBDcmView::OnMenuHistall()
+{
+	if (!m_sOneImgShow.pixle.empty())
+	{
+		Mat dst;
+		equalizeHist(m_sOneImgShow.pixle, dst);  //opencv库函数
+		m_sOneImgShow.pixle = dst.clone();
+		m_ls[0]->SetLayerImgData(m_sOneImgShow.pixle);
+		Invalidate(FALSE);
+	}
+}
+
+
+void CRBDcmView::OnMenuMask()
+{
+	CMaskSetDlg dlg;
+	if (IDCANCEL == dlg.DoModal())
+		return;
+	cv::Mat kernal;									//构建变换核
+	cv::Mat dst;									//目标图像
+	//从对话框中获取变换核
+	if (dlg.m_mask.weight != 0)						//权重系数不为0					
+	{
+		double tmp = (double)dlg.m_mask.weight;
+		kernal = (Mat_<double>(3, 3) <<
+			dlg.m_mask.mk[0][0]/tmp, dlg.m_mask.mk[0][1]/tmp, dlg.m_mask.mk[0][2]/tmp,
+			dlg.m_mask.mk[1][0]/tmp, dlg.m_mask.mk[1][1]/tmp, dlg.m_mask.mk[1][2]/tmp,
+			dlg.m_mask.mk[2][0]/tmp, dlg.m_mask.mk[2][1]/tmp, dlg.m_mask.mk[2][2]/tmp);
+	}
+	else                                           //权重系数为0
+	{
+		kernal = (Mat_<char>(3, 3) <<
+			dlg.m_mask.mk[0][0], dlg.m_mask.mk[0][1], dlg.m_mask.mk[0][2],
+			dlg.m_mask.mk[1][0], dlg.m_mask.mk[1][1], dlg.m_mask.mk[1][2],
+			dlg.m_mask.mk[2][0], dlg.m_mask.mk[2][1], dlg.m_mask.mk[2][2]);
+	}
+	filter2D(m_sOneImgShow.pixle.clone(), dst, 8, kernal);
+	m_ls[0]->SetLayerImgData(dst);
+	Invalidate(FALSE);
+}
+
+

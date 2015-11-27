@@ -1,6 +1,9 @@
 #include "StdAfx.h"
 #include "SegmentOperat.h"
 
+#include <algorithm>
+
+using namespace std;
 using namespace cv;    //for mat operator
 
 CSegmentOperat::CSegmentOperat(void)
@@ -340,19 +343,19 @@ Description: Éú³¤½á¹ûÇøÓò±ê¼ÇÎª°×É«(255),±³¾°É«ÎªºÚÉ«(0)
 Return:    Mat
 Others:    NULL
 ***************************************************************************************/
-Mat CSegmentOperat::RegionGrow(Mat src, CPoint pt, int th)
+Mat CSegmentOperat::RegionGrow(Mat src, Point2i pt, int th)
 {
-	CPoint ptGrowing;								//´ıÉú³¤µãÎ»ÖÃ
+	Point2i ptGrowing;								//´ıÉú³¤µãÎ»ÖÃ
 	int nGrowLable = 0;								//±ê¼ÇÊÇ·ñÉú³¤¹ı
 	int nSrcValue = 0;								//Éú³¤Æğµã»Ò¶ÈÖµ
 	int nCurValue = 0;								//µ±Ç°Éú³¤µã»Ò¶ÈÖµ
 	Mat matDst = Mat::zeros(src.size(), CV_8UC1);	//´´½¨Ò»¸ö¿Õ°×ÇøÓò£¬Ìî³äÎªºÚÉ«
 	//Éú³¤·½ÏòË³ĞòÊı¾İ
 	int DIR[8][2] = {{-1,-1}, {0,-1}, {1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}};  
-	Vector<CPoint> vcGrowPt;						//Éú³¤µãÕ»
+	Vector<Point2i> vcGrowPt;						//Éú³¤µãÕ»
 	vcGrowPt.push_back(pt);							//½«Éú³¤µãÑ¹ÈëÕ»ÖĞ
-	matDst.at<uchar>(pt.x, pt.y) = 255;				//±ê¼ÇÉú³¤µã
-	nSrcValue = src.at<uchar>(pt.x, pt.y);			//¼ÇÂ¼Éú³¤µãµÄ»Ò¶ÈÖµ
+	matDst.at<uchar>(pt.y, pt.x) = 255;				//±ê¼ÇÉú³¤µã
+	nSrcValue = src.at<uchar>(pt.y, pt.x);			//¼ÇÂ¼Éú³¤µãµÄ»Ò¶ÈÖµ
 	
 	while (!vcGrowPt.empty())						//Éú³¤Õ»²»Îª¿ÕÔòÉú³¤
 	{
@@ -368,14 +371,14 @@ Mat CSegmentOperat::RegionGrow(Mat src, CPoint pt, int th)
 			if (ptGrowing.x < 0 || ptGrowing.y < 0 || ptGrowing.x > (src.cols-1) || (ptGrowing.y > src.rows -1))
 				continue;
 
-			nGrowLable = matDst.at<uchar>(ptGrowing.x, ptGrowing.y);			//µ±Ç°´ıÉú³¤µãµÄ»Ò¶ÈÖµ
+			nGrowLable = matDst.at<uchar>(ptGrowing.y, ptGrowing.x);			//µ±Ç°´ıÉú³¤µãµÄ»Ò¶ÈÖµ
 
 			if (nGrowLable == 0)												//Èç¹û±ê¼Çµã»¹Ã»ÓĞ±»Éú³¤
 			{
-				nCurValue = src.at<uchar>(ptGrowing.x, ptGrowing.y);			
+				nCurValue = src.at<uchar>(ptGrowing.y, ptGrowing.x);			
 				if (abs(nSrcValue - nCurValue) < th)							//ÔÚãĞÖµ·¶Î§ÄÚÔòÉú³¤
 				{
-					matDst.at<uchar>(ptGrowing.x, ptGrowing.y) = 255;			//±ê¼ÇÎª°×É«
+					matDst.at<uchar>(ptGrowing.y, ptGrowing.x) = 255;			//±ê¼ÇÎª°×É«
 					vcGrowPt.push_back(ptGrowing);								//½«ÏÂÒ»¸öÉú³¤µãÑ¹ÈëÕ»ÖĞ
 				}
 			}
@@ -394,7 +397,7 @@ Description: »ñÈ¡µÄĞÎĞÄµã¿ÉÒÔÖ±½Ó½»ÓÉÇøÓòÉú³¤´¦Àí£¬²¢ÇÒ¿ÉÒÔµü´úÖÁÍ¼ÏñÏÂÒ»²ã£¬ÕûÌ
 Return:    
 Others:    NULL
 ***************************************************************************************/
-Mat CSegmentOperat::GetObjectCenter(Mat src,CPoint &pt1,CPoint &pt2)
+Mat CSegmentOperat::GetObjectCenter(Mat src,vector<Point2i>& vcPoint)
 {
 	//¶ÔÍ¼Ïñ½øĞĞ¸¯Ê´¼õĞ¡ÂÖÀª
 	Mat  et= getStructuringElement(MORPH_ELLIPSE,cv::Size(5,5)); 
@@ -426,10 +429,11 @@ Mat CSegmentOperat::GetObjectCenter(Mat src,CPoint &pt1,CPoint &pt2)
 	cv::Mat ele(9, 9, CV_8U, cv::Scalar(1));    //9X9½á¹¹ÔªËØ
 	erode(dst, dst, ele);						//¶ÔÍ¼Ïñ½øĞĞ¸¯Ê´,È¥µôÏ¸Ğ¡µÄ±ß½ç
 	cv::subtract(dst, tmp, dst);
+	
+	
 	//ÔÙ´ÎÕÒÍ¼Ïñ±ß½ç£¬¶ÔÍ¼ÏñÄÚ²¿½øĞĞÌî³ä
 	findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 	//drawContours(dst, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
-	
 	std::vector<std::vector<cv::Point>>::const_iterator itc2 = contours.begin();
 	cId = 0;
 	while (itc2 != contours.end())
@@ -440,8 +444,54 @@ Mat CSegmentOperat::GetObjectCenter(Mat src,CPoint &pt1,CPoint &pt2)
 		++itc2;
 		++cId;
 	}
-	Mat element = getStructuringElement(MORPH_ELLIPSE,cv::Size(7,7));
+	Mat element = getStructuringElement(MORPH_ELLIPSE, cv::Size(5, 5));
 	erode( dst, dst, element);
+	
+	Mat drawing = Mat::zeros( dst.size(), CV_8UC3 );
+	RNG rng(12345);
+	vector<RotatedRect> minRect( contours.size() );
+	vector<float> dis( contours.size() );
+	int j = 0;
+	while (1)
+	{
+		erode( dst, dst, element);
+		findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+		for( int i = 0; i < contours.size(); i++ )
+		{
+			minRect[i] = minAreaRect( Mat(contours[i]) );
+			dis.push_back(max<float>(minRect[i].size.height, minRect[i].size.width));
+		}
+		if (dis.size() <= 2 || 100 > *max_element(dis.begin(), dis.end()))     //¸¯Ê´µ½×î´ó±ß½ç¶¼ÊÇĞ¡ÓÚ100µÄÊ±ºò·µ»Ø
+		{
+			break;
+		}
+		dis.clear();
+	}
+
+	for (int i = 0; i< dis.size(); ++i)
+	{
+		vcPoint.push_back(minRect[i].center);
+	}
+
+
+
+	/*namedWindow("aaa", CV_WINDOW_AUTOSIZE);
+	imshow("aaa", tmp);*/
+
+	
+	//for( int i = 0; i< contours.size(); i++ )
+	//{
+	//	Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
+	//	// contour
+	//	drawContours( drawing, contours, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
+	//	// rotated rectangle
+	//	Point2f rect_points[4]; 
+	//	minRect[i].points( rect_points );
+	//	for( int j = 0; j < 4; j++ )
+	//		line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
+	//}
+
+	
 
 	return dst.clone();
 	/*
