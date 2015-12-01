@@ -36,6 +36,7 @@ BEGIN_MESSAGE_MAP(CRBDcmView, CView)
 	ON_COMMAND(ID_MENU_DRAWHIST, &CRBDcmView::OnMenuDrawhist)
 	ON_COMMAND(ID_MENU_HISTALL, &CRBDcmView::OnMenuHistall)
 	ON_COMMAND(ID_MENU_MASK, &CRBDcmView::OnMenuMask)
+	ON_COMMAND(ID_MENU_FILTER, &CRBDcmView::OnMenuFilter)
 END_MESSAGE_MAP()
 
 
@@ -380,3 +381,21 @@ void CRBDcmView::OnMenuMask()
 }
 
 
+
+
+void CRBDcmView::OnMenuFilter()
+{
+	if (m_sOneImgShow.pixle.empty())
+		return;
+	Mat dst;
+	medianBlur(m_sOneImgShow.pixle, dst, 3);	//opencv¿âº¯Êý
+	m_sOneImgShow.pixle = dst.clone();
+	m_ls[0]->SetLayerImgData(m_sOneImgShow.pixle);
+	Invalidate(FALSE);
+}
+
+
+sOneImg CRBDcmView::GetOneImg()
+{
+	return m_sOneImgShow;
+}

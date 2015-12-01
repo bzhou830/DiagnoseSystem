@@ -69,14 +69,16 @@ void COprtView::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_LUNG3, m_btnLung);
 	DDX_Control(pDX, IDC_BTN_VIDEO, m_btnCam);
 	DDX_Control(pDX, IDC_BTN_PLAY, m_btnPlay);
-	DDX_Text(pDX, IDC_EDIT_SUM, m_nSUM);
-	DDX_Text(pDX, IDC_EDIT_CURRENT, m_nCurrent);
 	DDX_Control(pDX, IDC_BTN_LAST, m_btnLast);
 	DDX_Control(pDX, IDC_BTN_NEXT, m_btnNext);
 	DDX_Control(pDX, IDC_BTN_MEAN, m_btnMean);
 	DDX_Control(pDX, IDC_BTN_MOM, m_btnMoM);
 	DDX_Control(pDX, IDC_BTN_LOADXML, m_btnLoadXML);
+	DDX_Control(pDX, IDC_BTN_SERIAL, m_btnSerialSeg);
+	DDX_Text(pDX, IDC_EDIT_SUM, m_nSUM);
+	DDX_Text(pDX, IDC_EDIT_CURRENT, m_nCurrent);
 }
+
 
 BEGIN_MESSAGE_MAP(COprtView, CFormView)
 	ON_BN_CLICKED(IDC_BTN_HIST, &COprtView::OnBnClickedBtnHist)
@@ -97,9 +99,11 @@ BEGIN_MESSAGE_MAP(COprtView, CFormView)
 	ON_BN_CLICKED(IDC_BTN_MEAN, &COprtView::OnBnClickedBtnMean)
 	ON_BN_CLICKED(IDC_BTN_MOM, &COprtView::OnBnClickedBtnMom)
 	ON_BN_CLICKED(IDC_BTN_LOADXML, &COprtView::OnBnClickedBtnLoadxml)
+	ON_BN_CLICKED(IDC_BTN_SERIAL, &COprtView::OnBnClickedBtnSerial)
 	ON_COMMAND(ID_FILE_SAVE, &COprtView::OnFileSave)
 	ON_COMMAND(ID_SERILE_OPEN, &COprtView::OnSerileOpen)
 	ON_COMMAND(ID_FILE_OPEN_ONE, &COprtView::OnFileOpenOne)
+	ON_BN_CLICKED(IDC_BTN_GETNUDOUL, &COprtView::OnBnClickedBtnGetnudoul)
 END_MESSAGE_MAP()
 
 
@@ -149,6 +153,7 @@ void COprtView::OnInitialUpdate()
 	m_btnMean.SetIcon(IDI_MEAN);			//均值迭代
 	m_btnMoM.SetIcon(IDI_OSTU);				//
 	m_btnLoadXML.SetIcon(IDI_OSTU);			//
+	m_btnSerialSeg.SetIcon(IDI_MEAN);		//
 }
 
 
@@ -251,14 +256,15 @@ void COprtView::OnBnClickedBtnMedian()
 //Max entropy segment
 void COprtView::OnBnClickedBtnEntropy()
 {
-	Executive(ENTROPY);
+	//Executive(ENTROPY);
+// 	createGaussianFilter(8,Size(5,5),1,1);
+// 	cv::Mat kernel = getGaussianKernel(5,1);
+	/*cv::Mat kernel = createGaussianFilter(8,Size(5,5),1,1);
+	namedWindow("gaosi",CV_WINDOW_AUTOSIZE);
+	cv::imshow("gaosi",kernel);*/
 }
 
-//Hence Image
-void COprtView::OnBnClickedBtnHence()
-{
-	Executive(ENHENCE);
-}
+
 
 //Show source image 
 void COprtView::OnBnClickedBtnSrcimg()
@@ -267,12 +273,6 @@ void COprtView::OnBnClickedBtnSrcimg()
 }
 
 
-
-
-void COprtView::OnBnClickedBtnMean()
-{
-	Executive(MEAN);
-}
 
 
 void COprtView::SetSum(int num)
@@ -364,7 +364,8 @@ void COprtView::OnBnClickedBtnLoadxml()
 void COprtView::OnBnClickedBtnOstu()
 {
 	CSegmentOperat seg;
-	cv::Mat m_dstImage = seg.OstuSeg(m_ImgSerial.GetCurrentMatImg().pixle.clone()).clone();
+	sOneImg src = (m_pMainFrm->m_pRBView)->GetOneImg();
+	cv::Mat m_dstImage = seg.OstuSeg(src.pixle.clone()).clone();
 	sOneImg info = m_ImgSerial.GetCurrentMatImg();
 	info.pixle = m_dstImage.clone();
 	(m_pMainFrm->m_pSegView)->SetImgData(info);
@@ -386,9 +387,29 @@ void COprtView::OnBnClickedBtnMom()
 {
 	sOneImg img;	//肺实质窗口中的图像
 	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
+	medianBlur(img.pixle, img.pixle, 3);
 	(m_pMainFrm->m_pClassier)->SegNodules(img);
 	//(((CMainFrame*)AfxGetMainWnd())->m_pSegView)->GetSegRealLungs(img);
 	//(((CMainFrame*)AfxGetMainWnd())->m_pClassier)->SegNodules(img);
+}
+
+
+void COprtView::OnBnClickedBtnMean()
+{
+	sOneImg img;
+	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
+	medianBlur(img.pixle, img.pixle, 3);
+	(m_pMainFrm->m_pClassier)->SegNodulesMean(img);
+	//Executive(MEAN);
+}
+
+
+//Hence Image
+void COprtView::OnBnClickedBtnHence()
+{
+	sOneImg img;
+	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
+	(m_pMainFrm->m_pClassier)->HenssisenEnhance(img);
 }
 
 
@@ -457,6 +478,7 @@ void COprtView::OnBnClickedBtnMask()
 			dlg.m_mask.mk[2][0], dlg.m_mask.mk[2][1], dlg.m_mask.mk[2][2]);
 	}
 	filter2D(m_ImgSerial.GetCurrentMatImg().pixle.clone(), dst, 8, kernal);
+	
 }
 
 
@@ -501,39 +523,13 @@ void COprtView::OnBnClickedBtnVideo()
 //threshold segmentation
 void COprtView::OnBnClickedBtnCut()
 {
-	CSegmentOperat seg;
-	sOneImg img;					//肺实质窗口中的图像
-	sOneImg src;                    //原始图像
-	cv::Mat dst = Mat::zeros(src.pixle.size(), CV_8UC1);
-	cv::Mat tmp = Mat::zeros(src.pixle.size(), CV_8UC1);
-	src = (m_pMainFrm->m_pOpt)->m_ImgSerial.GetCurrentMatImg();
-	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
-	CPoint pt1,pt2;
-	vector<Point2i> vcPoint;
-	seg.GetObjectCenter(img.pixle,vcPoint);  //处理
-	
-	for (size_t i = 0; i < vcPoint.size(); ++i)
-	{
-		tmp = seg.RegionGrow(src.pixle, vcPoint[i], 10).clone();
-		if (i == 0)
-			dst = tmp.clone();
-		else
-			addWeighted(dst,1,tmp,1,0,dst);
-		namedWindow("aaa",CV_WINDOW_AUTOSIZE);
-		imshow("aaa",tmp);
-	}
-	img.pixle = dst.clone();
-	namedWindow("aaa",CV_WINDOW_AUTOSIZE);
-	imshow("aaa",tmp);
 
-	(m_pMainFrm->m_pClassier)->SetImgData(img);
 }
 
 
 //play image serials
 void COprtView::OnBnClickedBtnPlay()
 {
-	//Executive(PLAY);
 	if (m_PlayDlg != NULL)			//若对象已经存在内存中，则显示就可以了，避免创建多个对象
 	{
 		m_PlayDlg->SetImgSerial(m_ImgSerial.GetBegin(), m_ImgSerial.GetImageNum());
@@ -548,3 +544,58 @@ void COprtView::OnBnClickedBtnPlay()
 }
 
 
+
+//序列图像分割
+//使用区域生长方法
+void COprtView::OnBnClickedBtnSerial()
+{
+	CSegmentOperat seg;
+	sOneImg img;					//肺实质窗口中的图像
+	sOneImg src;                    //原始图像
+	cv::Mat dst = Mat::zeros(src.pixle.size(), CV_8UC1);
+	cv::Mat tmp = Mat::zeros(src.pixle.size(), CV_8UC1);
+	src = (m_pMainFrm->m_pOpt)->m_ImgSerial.GetCurrentMatImg();
+	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
+	CPoint pt1,pt2;
+	vector<Point2i> vcPoint;
+	seg.GetObjectCenter(img.pixle,vcPoint);  //处理
+
+	for (size_t i = 0; i < vcPoint.size(); ++i)
+	{
+		tmp = seg.RegionGrow(src.pixle, vcPoint[i], 10).clone();			//区域生长结果
+		Mat element = getStructuringElement(MORPH_ELLIPSE,cv::Size(7,7));	//对生长的结果边缘进行修补
+		morphologyEx( tmp, tmp, MORPH_CLOSE, element);						//使用形态学闭运算对边缘进行修补
+		if (i == 0)															//元图像为空的时候则进行克隆
+			dst = tmp.clone();
+		else                                                                //原图像不为空的时候则叠加图像
+			addWeighted(dst, 1, tmp, 1, 0, dst);
+	}
+
+	std::vector<std::vector<cv::Point>> contours;    //边界点集合
+	std::vector<cv::Vec4i> hierarchy;				 //边界
+	findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	drawContours(dst, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
+
+	img.pixle = dst.clone();							
+	namedWindow("aaa",CV_WINDOW_AUTOSIZE);									//显示分割后的结果
+	imshow("aaa",img.pixle);
+	(m_pMainFrm->m_pClassier)->SetImgData(img);
+}
+
+
+//
+void COprtView::OnBnClickedBtnGetnudoul()
+{
+	//(m_pMainFrm->m_pClassier)->SetImgData(img);
+	sOneImg img = (m_pMainFrm->m_pClassier)->GetOneImg();	//获取结节窗中显示的图像，疑似结节的灰度图像
+	std::vector<std::vector<cv::Point>> contours;			//边界点集合
+	std::vector<cv::Vec4i> hierarchy;						//边界
+	
+	cv::medianBlur(img.pixle,img.pixle,3);
+	findContours(img.pixle, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	drawContours(img.pixle, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
+	
+	namedWindow("aaa",CV_WINDOW_AUTOSIZE);									//显示分割后的结果
+	imshow("aaa",img.pixle);
+
+}

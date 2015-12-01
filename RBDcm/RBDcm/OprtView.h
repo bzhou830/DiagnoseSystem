@@ -20,6 +20,7 @@ class COprtView : public CFormView
 public:
 	CImgSerial  m_ImgSerial;                //Mat-image structure
 	CMainFrame* m_pMainFrm;
+	CPlaySeriesDlg* m_PlayDlg;
 private:
 	DECLARE_DYNCREATE(COprtView)
 protected:
@@ -79,15 +80,20 @@ public:
 	void Executive(int msg);
 	int m_nSUM;
 	int m_nCurrent;
+	//CRBDcmView* m_pRDBView;
+	//CRBDcmDoc* m_pDoc;
 	void SetSum(int num);
 	void SetCurrent(int num);
 	afx_msg void OnBnClickedBtnNext();
 	afx_msg void OnBnClickedBtnMean();
 	afx_msg void OnBnClickedBtnMom();
 	afx_msg void OnBnClickedBtnLoadxml();
-	afx_msg void OnSerile();
-	afx_msg void OnFileOpen();
 	afx_msg void OnFileSave();
+	afx_msg void OnSerileOpen();
+	afx_msg void OnFileOpenOne();
+	afx_msg void OnBnClickedBtnSerial();
+	CIconButton m_btnSerialSeg;
+	afx_msg void OnBnClickedBtnGetnudoul();
 };
 
 

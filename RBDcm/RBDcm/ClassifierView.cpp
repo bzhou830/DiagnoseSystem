@@ -121,3 +121,45 @@ void CClassifierView::SegNodules(sOneImg src)
 
 
 
+
+/***************************************************************************************
+Function: 结节分割函数响应函数
+Input:    sOneImg 一张图像的相关信息
+Output:   void 
+Description: 传入图像数据后刷新界面，显示图层信息
+Return:   NULL
+Others:   NULL
+***************************************************************************************/
+void CClassifierView::SegNodulesMean(sOneImg src)
+{
+	CSegmentOperat seg;									//创建一个分割对象
+	m_sOneImgShow.info = src.info;						//传入数据
+	cv::Mat dst = seg.IsodataSeg(src.pixle.clone());	//调用分割类函数对图像进行分割
+	
+	sOneImg srcimg = ((CMainFrame*)AfxGetMainWnd())->m_pRBView->GetOneImg();
+	cv::subtract(dst, srcimg.pixle, dst);
+	
+	m_sOneImgShow.pixle = dst.clone();					//分割结构输出保存
+	
+	m_ls[0]->SetLayerImgData(m_sOneImgShow.pixle);		//设置图层信息，并且进行刷新显示
+	m_ls[1]->SetLayerInfoData(m_sOneImgShow.info);
+	Invalidate(FALSE);
+}
+
+
+void CClassifierView::HenssisenEnhance(sOneImg src)
+{
+	m_sOneImgShow.info = src.info;						//传入数据
+	CEnhanceOperat enhance;
+	cv::Mat dst = enhance.HessianEnhance(m_sOneImgShow.pixle.clone(),2,10);	//创建一个分割对象
+	m_sOneImgShow.pixle = dst.clone();					//分割结构输出保存
+	m_ls[0]->SetLayerImgData(m_sOneImgShow.pixle);		//设置图层信息，并且进行刷新显示
+	m_ls[1]->SetLayerInfoData(m_sOneImgShow.info);
+	Invalidate(FALSE);
+}
+
+sOneImg CClassifierView::GetOneImg()
+{
+	return m_sOneImgShow;
+}
+

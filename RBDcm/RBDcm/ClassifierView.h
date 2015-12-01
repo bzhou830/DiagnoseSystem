@@ -2,6 +2,7 @@
 #include "Layer.h"
 #include "RBMermoryDC.h"
 #include "SegmentOperat.h"
+#include "EnhanceOperat.h"
 
 // CClassifierView йсм╪
 
@@ -29,6 +30,9 @@ protected:
 public:
 	void SetImgData(sOneImg src);
 	void SegNodules(sOneImg src);
+	void SegNodulesMean(sOneImg src);
+	void HenssisenEnhance(sOneImg src);
+	sOneImg GetOneImg();
 };
 
 
