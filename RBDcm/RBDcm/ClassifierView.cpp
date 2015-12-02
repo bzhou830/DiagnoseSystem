@@ -137,7 +137,9 @@ void CClassifierView::SegNodulesMean(sOneImg src)
 	cv::Mat dst = seg.IsodataSeg(src.pixle.clone());	//调用分割类函数对图像进行分割
 	
 	sOneImg srcimg = ((CMainFrame*)AfxGetMainWnd())->m_pRBView->GetOneImg();
-	cv::subtract(dst, srcimg.pixle, dst);
+	
+	bitwise_and(dst, srcimg.pixle, dst);
+	//cv::subtract(dst, srcimg.pixle, dst);
 	
 	m_sOneImgShow.pixle = dst.clone();					//分割结构输出保存
 	

@@ -43,10 +43,7 @@ Mat CSegmentOperat::IsodataSeg(Mat src, int n)
 			{
 				//CT图像无效黑色区域过多，去掉多余的像素，避免对计算带来干扰
 				if (pData[j] == 0)			//去掉黑色的点再做计算
-				{
-					++j;
 					continue;
-				}
 					
 				if (pData[j] < threshold)   //背景
 				{
@@ -60,6 +57,8 @@ Mat CSegmentOperat::IsodataSeg(Mat src, int n)
 				}
 			}
 		}
+		if (nBack == 0 || nObject == 0)
+			continue;
 		n = (MeansB/nBack + MeansO/nObject) / 2;
 	}
 	cv::threshold(src, dst, n, 255, 0);    //进行阈值分割
@@ -90,10 +89,7 @@ Mat CSegmentOperat::OstuSeg(Mat src)
 		for (int j = 0; j < nCol; ++j)
 		{
 			if (pData[j] == 0)					//排除掉黑色的像素点
-			{
-				++j;
 				continue;
-			}
 			tbHist[pData[j]] += 1;
 		}
 	}
@@ -158,10 +154,7 @@ Mat CSegmentOperat::EntropySeg(Mat src)
 		for (int j = 0; j < nCol; ++j)
 		{
 			if (pData[j] == 0)				//排除掉黑色的像素点
-			{
-				++j;
 				continue;
-			}
 			++TotalPixel;
 			tbHist[pData[j]] += 1;
 		}
@@ -205,7 +198,7 @@ Mat CSegmentOperat::EntropySeg(Mat src)
 		backEntropy = 0.0;
 	}
 	Mat dst;
-	cv::threshold(src, dst, index, 255, 0);    //进行阈值分割
+	cv::threshold(src, dst, index, 255, 0);				//进行阈值分割
 	return dst.clone();
 }
 
@@ -220,26 +213,23 @@ Others:    NULL
 ***************************************************************************************/
 Mat CSegmentOperat::MoMSeg(Mat src)
 {
-	int tbHist[256] = {0};					//每个像素值个数
+	int tbHist[256] = {0};						//每个像素值个数
 	Mat dst;
-	double moment1 = 0.0;					//图像的一阶矩
-	double P1 = 0.0;						//P1
+	double moment1 = 0.0;						//图像的一阶矩
+	double P1 = 0.0;							//P1
 	double tmpP = 0.0;
-	int TotalPixel = 0;						//纳入计算的总像素数
+	int TotalPixel = 0;							//纳入计算的总像素数
 	int index = 0;
-	int nCol = src.cols * src.channels();	//每行的像素个数
+	int nCol = src.cols * src.channels();		//每行的像素个数
 	for (int i = 0; i < src.rows; i++)
 	{
 		uchar* pData = src.ptr<uchar>(i);
 		for (int j = 0; j < nCol; ++j)
 		{
-			if (pData[j] == 0)				//排除掉黑色的像素点
-			{
-				++j;
+			if (pData[j] == 0)					//排除掉黑色的像素点
 				continue;
-			}
 			++TotalPixel;
-			tbHist[pData[j]] += 1;			//计算每个像素的个数
+			tbHist[pData[j]] += 1;				//计算每个像素的个数
 		}
 	}
 
@@ -253,10 +243,10 @@ Mat CSegmentOperat::MoMSeg(Mat src)
 
 	int sum = 0;
 	double div = 500.0;							//差值
-	for (int i=0; i<256; ++i)
+	for (int i=1; i<256; ++i)
 	{
 		sum = 0;
-		for (int j=0; j<i; ++j)
+		for (int j=1; j<i; ++j)
 		{
 			sum += tbHist[j];
 		}
@@ -268,10 +258,11 @@ Mat CSegmentOperat::MoMSeg(Mat src)
 			index  = i;
 		}
 	}
-	index += 10;
+	index += 20;
 	cv::threshold(src, dst, index, 255, 0);    //进行阈值分割
-	Mat  et= getStructuringElement(MORPH_ELLIPSE,cv::Size(5,5)); 
-	erode(dst, dst, et);
+ 	Mat  et= getStructuringElement(MORPH_ELLIPSE,cv::Size(5,5)); 
+ 	morphologyEx( src, src, MORPH_OPEN, et);
+	//erode(dst, dst, et);
 	return dst.clone();
 }
 
@@ -293,7 +284,7 @@ Mat CSegmentOperat::GetLungArea(Mat src)
 	Mat dst(src.size(), CV_8U, cv::Scalar(255));
 	std::vector<std::vector<cv::Point>> contours;    //边界点集合
 	std::vector<cv::Vec4i> hierarchy;				 //边界
-	findContours(src, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	findContours(src.clone(), contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
 	//找到最大轮廓
 	std::vector<std::vector<cv::Point>>::const_iterator itc = contours.begin();
@@ -326,7 +317,7 @@ Mat CSegmentOperat::GetLungArea(Mat src)
 	morphologyEx( dst, dst, MORPH_CLOSE, element);
 	
 	//再次找图像边界，对图像内部进行填充
-	findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	findContours(dst.clone(), contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 	drawContours(dst, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
 	
 	element = getStructuringElement(MORPH_ELLIPSE,cv::Size(5,5));    //使用5*5原型模板进行腐蚀
@@ -406,7 +397,7 @@ Mat CSegmentOperat::GetObjectCenter(Mat src,vector<Point2i>& vcPoint)
 	Mat dst(src.size(), CV_8U, cv::Scalar(255));	 
 	std::vector<std::vector<cv::Point>> contours;    //边界点集合
 	std::vector<cv::Vec4i> hierarchy;				 //边界
-	findContours(src, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	findContours(src.clone(), contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 	//找到最大轮廓
 	std::vector<std::vector<cv::Point>>::const_iterator itc = contours.begin();
 	UINT nSize = itc->size();
@@ -432,7 +423,7 @@ Mat CSegmentOperat::GetObjectCenter(Mat src,vector<Point2i>& vcPoint)
 	
 	
 	//再次找图像边界，对图像内部进行填充
-	findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	findContours(dst.clone(), contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 	//drawContours(dst, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
 	std::vector<std::vector<cv::Point>>::const_iterator itc2 = contours.begin();
 	cId = 0;
@@ -455,7 +446,7 @@ Mat CSegmentOperat::GetObjectCenter(Mat src,vector<Point2i>& vcPoint)
 	while (1)
 	{
 		erode( dst, dst, element);
-		findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+		findContours(dst.clone(), contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 		for( int i = 0; i < contours.size(); i++ )
 		{
 			minRect[i] = minAreaRect( Mat(contours[i]) );
@@ -473,12 +464,9 @@ Mat CSegmentOperat::GetObjectCenter(Mat src,vector<Point2i>& vcPoint)
 		vcPoint.push_back(minRect[i].center);
 	}
 
-
-
 	/*namedWindow("aaa", CV_WINDOW_AUTOSIZE);
 	imshow("aaa", tmp);*/
 
-	
 	//for( int i = 0; i< contours.size(); i++ )
 	//{
 	//	Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
@@ -491,8 +479,6 @@ Mat CSegmentOperat::GetObjectCenter(Mat src,vector<Point2i>& vcPoint)
 	//		line( drawing, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
 	//}
 
-	
-
 	return dst.clone();
 	/*
 	//使用圆形模板进行闭运算，对细小的缺口进行修补（吹球法）
@@ -502,9 +488,10 @@ Mat CSegmentOperat::GetObjectCenter(Mat src,vector<Point2i>& vcPoint)
 	//再次找图像边界，对图像内部进行填充
 	findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 	drawContours(dst, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
-
 	element = getStructuringElement(MORPH_ELLIPSE,cv::Size(5,5));    //使用5*5原型模板进行腐蚀
 	erode(dst, dst, element);
 	*/
 	//return dst.clone();
 }
+
+

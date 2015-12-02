@@ -382,16 +382,7 @@ void COprtView::OnBnClickedBtnLung()
 }
 
 
-//矩量分割
-void COprtView::OnBnClickedBtnMom()
-{
-	sOneImg img;	//肺实质窗口中的图像
-	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
-	medianBlur(img.pixle, img.pixle, 3);
-	(m_pMainFrm->m_pClassier)->SegNodules(img);
-	//(((CMainFrame*)AfxGetMainWnd())->m_pSegView)->GetSegRealLungs(img);
-	//(((CMainFrame*)AfxGetMainWnd())->m_pClassier)->SegNodules(img);
-}
+
 
 
 void COprtView::OnBnClickedBtnMean()
@@ -484,6 +475,7 @@ void COprtView::OnBnClickedBtnMask()
 
 void COprtView::OnFileSave()
 {
+
 }
 
 
@@ -573,7 +565,7 @@ void COprtView::OnBnClickedBtnSerial()
 
 	std::vector<std::vector<cv::Point>> contours;    //边界点集合
 	std::vector<cv::Vec4i> hierarchy;				 //边界
-	findContours(dst, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	findContours(dst.clone(), contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 	drawContours(dst, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
 
 	img.pixle = dst.clone();							
@@ -583,6 +575,7 @@ void COprtView::OnBnClickedBtnSerial()
 }
 
 
+#include "Features.h"
 //
 void COprtView::OnBnClickedBtnGetnudoul()
 {
@@ -591,11 +584,29 @@ void COprtView::OnBnClickedBtnGetnudoul()
 	std::vector<std::vector<cv::Point>> contours;			//边界点集合
 	std::vector<cv::Vec4i> hierarchy;						//边界
 	
-	cv::medianBlur(img.pixle,img.pixle,3);
-	findContours(img.pixle, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	cv::medianBlur(img.pixle, img.pixle,3);
+	findContours(img.pixle.clone(), contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 	drawContours(img.pixle, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
 	
+	sOneImg simg;	//肺实质窗口中的图像
+	(m_pMainFrm->m_pSegView)->GetSegRealLungs(simg);
+	bitwise_and(simg.pixle, img.pixle, img.pixle);
+	CFeatures features;
+	features.SetMatImgAndContours(img.pixle, contours);
+	features.CalculateFeatures();
 	namedWindow("aaa",CV_WINDOW_AUTOSIZE);									//显示分割后的结果
 	imshow("aaa",img.pixle);
 
+}
+
+//矩量分割
+void COprtView::OnBnClickedBtnMom()
+{
+	sOneImg img;	//肺实质窗口中的图像
+	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
+	medianBlur(img.pixle, img.pixle, 3);
+	(m_pMainFrm->m_pClassier)->SegNodules(img);
+	
+	//(((CMainFrame*)AfxGetMainWnd())->m_pSegView)->GetSegRealLungs(img);
+	//(((CMainFrame*)AfxGetMainWnd())->m_pClassier)->SegNodules(img);
 }
