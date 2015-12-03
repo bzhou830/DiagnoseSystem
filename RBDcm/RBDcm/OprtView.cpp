@@ -575,7 +575,7 @@ void COprtView::OnBnClickedBtnSerial()
 }
 
 
-#include "Features.h"
+#include "OneImgFeatures.h"
 //
 void COprtView::OnBnClickedBtnGetnudoul()
 {
@@ -591,7 +591,7 @@ void COprtView::OnBnClickedBtnGetnudoul()
 	sOneImg simg;	//肺实质窗口中的图像
 	(m_pMainFrm->m_pSegView)->GetSegRealLungs(simg);
 	bitwise_and(simg.pixle, img.pixle, img.pixle);
-	CFeatures features;
+	COneImgFeatures features;
 	features.SetMatImgAndContours(img.pixle, contours);
 	features.CalculateFeatures();
 	namedWindow("aaa",CV_WINDOW_AUTOSIZE);									//显示分割后的结果
