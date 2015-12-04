@@ -472,10 +472,18 @@ void COprtView::OnBnClickedBtnMask()
 	
 }
 
-
+//保存第一个窗口中的图像
 void COprtView::OnFileSave()
 {
-
+	CFileDialog dlg(FALSE);
+	dlg.m_ofn.lpstrTitle = "文件保存";
+	dlg.m_ofn.lpstrFilter = "Bmp Files(*.bmp)\0*.bmp\0All Files(*.*)\0*.*\0\0";
+	dlg.m_ofn.lpstrDefExt = "bmp";
+	sOneImg img = m_pMainFrm->m_pRBView->GetOneImg();
+	if (dlg.DoModal() == IDOK)
+	{
+		imwrite((LPCTSTR)dlg.GetPathName(), img.pixle);
+	}
 }
 
 
