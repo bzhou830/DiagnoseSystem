@@ -107,6 +107,7 @@ BOOL CRBDcmApp::InitInstance()
 	m_pMainWnd->UpdateWindow();
 	// 仅当具有后缀时才调用 DragAcceptFiles
 	// 在 SDI 应用程序中，这应在 ProcessShellCommand 之后发生
+	SkinH_Attach();
 	return TRUE;
 }
 
@@ -116,7 +117,6 @@ int CRBDcmApp::ExitInstance()
 	AfxOleTerm(FALSE);
 	return CWinApp::ExitInstance();
 }
-
 
 // CRBDcmApp 消息处理程序
 

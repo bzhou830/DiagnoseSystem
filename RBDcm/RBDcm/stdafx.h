@@ -40,7 +40,12 @@
 
 #include "BaseStruct.h"
 #include <afxcview.h>
+#include "resource.h"
+#include "MainFrm.h"
 
+
+#include "SkinH.h"
+#pragma comment(lib,"SkinH.lib")
 
 
 
