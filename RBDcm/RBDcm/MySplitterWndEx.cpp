@@ -56,7 +56,7 @@ void CMySplitterWndEx::OnDrawSplitter(CDC* pDC, ESplitType nType, const CRect& r
 	if (pDC != NULL)
 	{
 		CBrush  brush;
-		brush.CreateSolidBrush(RGB(200,200,200));
+		brush.CreateSolidBrush(RGB(221,206,180));
 		//pDC->SelectObject(&brush);
 		pDC->FillRect(&rect,&brush);
 	}

@@ -81,6 +81,7 @@ void COneImgFeatures::CalculateFeatures()
 {
 	Mat drawing = Mat::zeros(m_SrcImg.size(), CV_8UC3 );				//创建一个三通道的RGB彩色Mat图像
 	cv::Rect rect;														//联通域包络矩形
+	cv::Mat fe(m_contour->size(), 12, CV_32F, Scalar(0));				//特征矩阵
 	for( int i = 0; i< m_contour->size(); i++ )							//遍历联通域序列
 	{
 		CContourFeatures features;												//一个联通域的特征信息
@@ -106,9 +107,21 @@ void COneImgFeatures::CalculateFeatures()
 		//矩形度
 		features.m_fSameRect = features.m_fArea / (rorect.size.height * rorect.size.width);
 
-		//写入xml文件
+		//写入特征矩阵
+		fe.at<float>(i, 0) = features.m_fGrayMean;			//均值
+		fe.at<float>(i, 1) = features.m_fVariance;			//方差
+		fe.at<float>(i, 2) = features.m_fArea;				//面积
+		fe.at<float>(i, 3) = features.m_fCircumference;		//周长
+		fe.at<float>(i, 4) = features.m_fDiameter;			//直径
+		fe.at<float>(i, 5) = features.m_fSameCircle;		//圆似度
+		fe.at<float>(i, 6) = features.m_fFlaten;			//扁度
+		fe.at<float>(i, 7) = features.m_fCompactedness;		//紧凑性
+		fe.at<float>(i, 8) = features.m_fConcavity;			//凹形率
+		fe.at<float>(i, 9) = features.m_fSameRect;			//矩似度
+		fe.at<float>(i, 10) = features.m_ptPosition.x;		//X轴位置
+		fe.at<float>(i, 11) = features.m_ptPosition.y;		//Y轴位置
 		
-
+		//fe.at<CV_32F>() = features.m_fGrayMean;
 		//m_features.push_back(features);
 		for (int nX=rect.x; nX<(rect.x+rect.width); ++nX)			//
 		{
@@ -132,13 +145,22 @@ void COneImgFeatures::CalculateFeatures()
 					drawing.at<cv::Vec3b>(nY, nX)[0] = 0;
 					drawing.at<cv::Vec3b>(nY, nX)[1] = 0;
 					drawing.at<cv::Vec3b>(nY, nX)[2] = 255;
-					
 					putText(drawing, abc, Point(features.m_ptPosition.x, features.m_ptPosition.y),
 					CV_FONT_HERSHEY_PLAIN, 0.7, Scalar(0,255,255), 1);
 				}
 			}
 		}
 	}
-	namedWindow("test", CV_WINDOW_AUTOSIZE);
-	imshow("test",drawing);
+
+	//写入xml文件
+	/*
+	FileStorage fs("F:\\TrainingData.xml", FileStorage::WRITE);
+	fs << "TrainingData" << fe;
+	fs.release();
+	*/
+	ofstream file("test.csv");
+	file << format(fe,"csv");
+	file.close();
+	cv::namedWindow("test", CV_WINDOW_AUTOSIZE);
+	cv::imshow("test",drawing);
 }

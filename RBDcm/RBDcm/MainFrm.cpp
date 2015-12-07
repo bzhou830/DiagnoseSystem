@@ -21,6 +21,17 @@ IMPLEMENT_DYNCREATE(CMainFrame, CFrameWnd)
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_CREATE()
 	ON_MESSAGE(UM_PROSSESS, OnProgress)
+	ON_COMMAND(ID_BTN_RESET, &CMainFrame::OnBtnReset)
+	ON_COMMAND(ID_BTN_ZOOM, &CMainFrame::OnBtnZoom)
+	ON_COMMAND(ID_BTN_SRCIMG, &CMainFrame::OnBtnSrcimg)
+	ON_COMMAND(ID_BTN_PLAYIMGS, &CMainFrame::OnBtnPlayimgs)
+	ON_COMMAND(ID_BTN_NEXTIMG, &CMainFrame::OnBtnNextimg)
+	ON_COMMAND(ID_BTN_LOADXML, &CMainFrame::OnBtnLoadxml)
+	ON_COMMAND(ID_BTN_LASTIMG, &CMainFrame::OnBtnLastimg)
+	ON_COMMAND(ID_BTN_HISTIMG, &CMainFrame::OnBtnHistimg)
+	ON_COMMAND(ID_BTN_CAMERA, &CMainFrame::OnBtnCamera)
+	ON_COMMAND(ID_SERILE_OPEN, &CMainFrame::OnSerileOpen)
+	ON_COMMAND(ID_FILE_OPEN_ONE, &CMainFrame::OnFileOpenOne)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -52,8 +63,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CFrameWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
-
-	if (!m_wndStatusBar.Create(this))
+	//创建状态栏
+	if (!m_wndStatusBar.Create(this))						
 	{
 		TRACE0("未能创建状态栏\n");
 		return -1;      // 未能创建
@@ -62,7 +73,18 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndStatusBar.SetPaneInfo(1,ID_INDICATOR_CAPS, SBPS_NORMAL, 50);
 	m_wndStatusBar.SetPaneInfo(2,ID_INDICATOR_NUM, SBPS_NORMAL, 100);
 	m_wndStatusBar.SetPaneInfo(3,ID_INDICATOR_SCRL, SBPS_NORMAL, 100);
-	PostMessage(UM_PROSSESS);
+	//创建工具栏
+	if (!m_toolBar.CreateEx(this,TBSTYLE_FLAT, WS_CHILD|WS_VISIBLE|CBRS_LEFT
+		|CBRS_TOOLTIPS|CBRS_FLYBY|CBRS_SIZE_DYNAMIC)
+		|| !m_toolBar.LoadToolBar(IDR_TOOLBAR1))
+	{
+		return -1;
+	}
+	m_toolBar.EnableDocking(CBRS_ALIGN_ANY);		//工具栏可以停靠
+	EnableDocking(CBRS_ALIGN_ANY);					//窗口支持停靠
+	DockControlBar(&m_toolBar);						//停靠工具栏
+
+	PostMessage(UM_PROSSESS);						//发送消息，在状态栏上创建工具栏
 	return 0;
 }
 
@@ -123,15 +145,12 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	}
 	CRect rct;
 	GetWindowRect(&rct);
-	//GetClientRect(&rct);
 	int nRcWidth = rct.Width();
 	int nRcHeight = rct.Height();
-	nRcHeight -= 60;				//去掉标题，菜单，状态栏
-	//左侧绑定操作面板
-	m_splt.CreateView(0, 0, RUNTIME_CLASS(COprtView), CSize(200, nRcHeight), pContext);
-	m_pOpt = (COprtView*)m_splt.GetPane(0,0);
+	nRcHeight -= 60;							//标题，状态栏预留
+
 	//右侧绑定显示窗口
-	if (!m_splt2.CreateStatic(&m_splt, 2,2,WS_CHILD|WS_VISIBLE,m_splt.IdFromRowCol(0, 1)))
+	if (!m_splt2.CreateStatic(&m_splt, 2, 2, WS_CHILD|WS_VISIBLE, m_splt.IdFromRowCol(0, 0)))
 	{
 		AfxMessageBox("窗口分割失败！");
 		return FALSE;
@@ -146,6 +165,13 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	m_pClassier = (CClassifierView*)m_splt2.GetPane(1,0);
 	m_splt2.CreateView(1, 1, RUNTIME_CLASS(CInfoView), CSize(nRcWidth, nRcHeight), pContext);
 	m_pInfoView = (CInfoView*)m_splt2.GetPane(1,1);
+	
+	m_splt.CreateView(0, 1, RUNTIME_CLASS(COprtView), CSize(200, nRcHeight), pContext);
+	m_pOpt = (COprtView*)m_splt.GetPane(0,1);
+	
+	m_splt.SetColumnInfo(0, rct.Width()-210, 500);
+	m_splt.SetColumnInfo(1,  200, 100);
+	
 	return TRUE;
 }
 
@@ -267,4 +293,148 @@ int CMainFrame::ResetFrm()
 	m_pClassier->Invalidate(FALSE);
 	m_pInfoView->Invalidate(FALSE);
 	return 0;
+}
+
+
+BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
+{
+	return CFrameWnd::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
+}
+
+
+void CMainFrame::OnBtnReset()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+
+void CMainFrame::OnBtnZoom()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+
+void CMainFrame::OnBtnSrcimg()
+{
+	CSrcShowDlg dlg;
+	dlg.SetImgData(m_ImgSerial.GetCurrentMatImg().pixle.clone());
+	dlg.DoModal();
+	dlg.CenterWindow();
+}
+
+
+void CMainFrame::OnBtnPlayimgs()
+{
+	if (m_PlayDlg != NULL)			//若对象已经存在内存中，则显示就可以了，避免创建多个对象
+	{
+		m_PlayDlg->SetImgSerial(m_ImgSerial.GetBegin(), m_ImgSerial.GetImageNum());
+		m_PlayDlg->ShowWindow(SW_NORMAL);
+		return;
+	}
+	m_PlayDlg = new CPlaySeriesDlg();
+	CRBDcmView *pView = ((CMainFrame*)AfxGetMainWnd())->m_pRBView;
+	m_PlayDlg->Create(MAKEINTRESOURCE(IDD_PLAY_SERI), pView);
+	m_PlayDlg->SetImgSerial(m_ImgSerial.GetBegin(), m_ImgSerial.GetImageNum());
+	m_PlayDlg->ShowWindow(SW_NORMAL);
+}
+
+
+void CMainFrame::OnBtnNextimg()
+{
+	sOneImg img = m_ImgSerial.NextMatImg();
+	m_pRBView->SetImgData(img);
+	m_pInfoView->SetImgData(img);
+	//SetCurrent(m_ImgSerial.GetCurrentNum());
+}
+
+void CMainFrame::OnBtnLoadxml()
+{
+	CFileDialog dlg(TRUE);								//文件打开对话框
+	dlg.m_ofn.lpstrTitle = "打开Xml文件";				//指定打开文件对话框名称
+	//文件过滤器
+	dlg.m_ofn.lpstrFilter = "xml Files(*.xml)\0*.xml\0All Files(*.*)\0*.*\0\0";  
+	if (IDCANCEL == dlg.DoModal())						//弹出文件打开对话框，选择取消则直接返回
+		return;
+	CString strFileName = dlg.GetPathName();			//获取文件路径+文件名
+	m_ImgSerial.LoadXml(strFileName);					//加载xml文件
+	sOneImg info = m_ImgSerial.GetCurrentMatImg();
+	m_pInfoView->SetImgData(info);						//向信息显示窗口传入结节的信息
+}
+
+
+void CMainFrame::OnBtnLastimg()
+{
+	sOneImg img = m_ImgSerial.LastMatImg();
+	m_pRBView->SetImgData(img);
+	m_pInfoView->SetImgData(img);
+	//SetCurrent(m_ImgSerial.GetCurrentNum());
+}
+
+
+void CMainFrame::OnBtnHistimg()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+
+void CMainFrame::OnBtnCamera()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+
+
+
+
+void CMainFrame::OnSerileOpen()
+{
+	AfxMessageBox("打开图像序列");
+	CFileDialog dlg(TRUE);								//文件打开对话框
+	CFileFind ff;										//文件查找类
+	CStringArray dcmPathstr;							//文件路径+文件名列表 dcm文件
+	dlg.m_ofn.lpstrTitle = "打开图像序列";				//指定打开文件对话框名称
+	dlg.m_ofn.lpstrFilter = "Dcm Files(*.dcm)\0*.dcm\0All Files(*.*)\0*.*\0\0";  //文件过滤器
+
+	if (IDCANCEL == dlg.DoModal())						//弹出文件打开对话框，选择取消则直接返回
+		return;
+
+	CString strFileName = dlg.GetPathName();			//获取文件路径+文件名
+	int end = strFileName.ReverseFind('\\');			//逆向查找
+	CString strFilePath = strFileName.Left(end);		//去掉最后的文件名得到文件目录
+
+	if(!ff.FindFile(strFilePath + "\\*.dcm"))			//查找目录下是否存在dcm文件，不存在则退出
+		return;
+
+	while(ff.FindNextFile())							//存在dcm文件，将其文件完整路径存入dcmPathstr
+		dcmPathstr.Add(strFilePath + "\\" + ff.GetFileName());
+
+	m_ImgSerial.Clear();								//导入数据前先清除
+	CString strXml = NULL;								//文件路径
+	for (int i=0; i<dcmPathstr.GetSize(); ++i)		
+	{
+		strFileName = dcmPathstr.GetAt(i);				//从序列中取得文件路径
+		m_ImgSerial.LoadDcm(strFileName);				//加载Dcm文件
+	}
+	//SetSum(m_ImgSerial.GetImageNum());					//显示当前图像总数
+	//SetCurrent(m_ImgSerial.GetCurrentNum());			//显示当前图像序号
+	sOneImg info = m_ImgSerial.GetCurrentMatImg();		//取得当前图像
+	m_pRBView->SetImgData(info);			//将图像设置到CRBDcm类中
+}
+
+
+void CMainFrame::OnFileOpenOne()
+{
+	CFileDialog dlg(TRUE);								//文件打开对话框
+	dlg.m_ofn.lpstrTitle = "打开单张图像";				//指定打开文件对话框名称
+	//文件过滤器
+	dlg.m_ofn.lpstrFilter = "Dcm Files(*.dcm)\0*.dcm\0All Files(*.*)\0*.*\0\0";		
+	if (IDCANCEL == dlg.DoModal())						//弹出文件打开对话框，选择取消则直接返回
+		return;
+	CString strFileName = dlg.GetPathName();			//获取文件路径+文件名
+	m_ImgSerial.Clear();								//清除原有数据
+	m_ImgSerial.LoadDcm(strFileName);					//加载数据
+	//SetSum(m_ImgSerial.GetImageNum());				//显示当前图像总数
+	//SetCurrent(m_ImgSerial.GetCurrentNum());			//显示当前图像序号
+	sOneImg info = m_ImgSerial.GetCurrentMatImg();		//序列中当前图像
+	m_pRBView->SetImgData(info);			//设置当前图像
 }

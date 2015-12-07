@@ -291,6 +291,7 @@ void COprtView::SetCurrent(int num)
 
 void COprtView::OnSerileOpen()
 {
+	/*
 	CFileDialog dlg(TRUE);								//文件打开对话框
 	CFileFind ff;										//文件查找类
 	CStringArray dcmPathstr;							//文件路径+文件名列表 dcm文件
@@ -321,6 +322,7 @@ void COprtView::OnSerileOpen()
 	SetCurrent(m_ImgSerial.GetCurrentNum());			//显示当前图像序号
 	sOneImg info = m_ImgSerial.GetCurrentMatImg();		//取得当前图像
 	(m_pMainFrm->m_pRBView)->SetImgData(info);			//将图像设置到CRBDcm类中
+	*/
 }
 
 
