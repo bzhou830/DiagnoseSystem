@@ -52,10 +52,10 @@ void CInfoView::OnInitialUpdate()
 	list.SetBkColor(RGB(200, 200, 200));					//背景色设置
 	list.SetTextBkColor(RGB(200, 200, 200));				//设置文本背景颜色
 	list.SetTextColor(RGB(10, 10, 80));						//设置文本颜色
-	list.InsertColumn(0, "序号", LVCFMT_CENTER, 80);			//插入列
-	list.InsertColumn(1, "zPosition", LVCFMT_CENTER, 100);	//插入列
-	list.InsertColumn(2, "像素位置", LVCFMT_CENTER, 100);	//插入列
-	list.InsertColumn(3, "是否是结节", LVCFMT_CENTER, 100);	//插入列
+	list.InsertColumn(0, "序号", LVCFMT_CENTER, 40);			//插入列
+	list.InsertColumn(1, "zPos", LVCFMT_CENTER, 45);	    //插入列
+	list.InsertColumn(2, "像素位置", LVCFMT_CENTER, 60);	    //插入列
+	list.InsertColumn(3, "是否结节", LVCFMT_CENTER, 70);	    //插入列
 }
 
 

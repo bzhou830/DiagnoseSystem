@@ -32,6 +32,13 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_BTN_CAMERA, &CMainFrame::OnBtnCamera)
 	ON_COMMAND(ID_SERILE_OPEN, &CMainFrame::OnSerileOpen)
 	ON_COMMAND(ID_FILE_OPEN_ONE, &CMainFrame::OnFileOpenOne)
+	ON_COMMAND(ID_BTN_ENTROPY, &CMainFrame::OnBtnEntropy)
+	ON_COMMAND(ID_BTN_OTSU, &CMainFrame::OnBtnOtsu)
+	ON_COMMAND(ID_BTN_REALLUNG, &CMainFrame::OnBtnReallung)
+//	ON_COMMAND(ID_BTN_NUDOUL, &CMainFrame::OnBtnNudoul)
+ON_COMMAND(ID_BTN_NUDOUL, &CMainFrame::OnBtnNudoul)
+ON_COMMAND(ID_BTN_MOM, &CMainFrame::OnBtnMom)
+ON_COMMAND(ID_BTN_MEAN, &CMainFrame::OnBtnMean)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -155,7 +162,7 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 		AfxMessageBox("窗口分割失败！");
 		return FALSE;
 	}
-	nRcWidth = (nRcWidth-200)/2;
+	nRcWidth = (nRcWidth - 200)/2;
 	nRcHeight = nRcHeight/2;
 	m_splt2.CreateView(0, 0, RUNTIME_CLASS(CRBDcmView), CSize(nRcWidth, nRcHeight), pContext);
 	m_pRBView = (CRBDcmView*)m_splt2.GetPane(0,0);
@@ -163,11 +170,12 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	m_pSegView = (CSegView*)m_splt2.GetPane(0,1);
 	m_splt2.CreateView(1, 0, RUNTIME_CLASS(CClassifierView), CSize(nRcWidth, nRcHeight), pContext);
 	m_pClassier = (CClassifierView*)m_splt2.GetPane(1,0);
-	m_splt2.CreateView(1, 1, RUNTIME_CLASS(CInfoView), CSize(nRcWidth, nRcHeight), pContext);
-	m_pInfoView = (CInfoView*)m_splt2.GetPane(1,1);
+	m_splt2.CreateView(1, 1, RUNTIME_CLASS(CClassifierView), CSize(nRcWidth, nRcHeight), pContext);
+	//m_pInfoView = (CInfoView*)m_splt2.GetPane(1,1);
 	
-	m_splt.CreateView(0, 1, RUNTIME_CLASS(COprtView), CSize(200, nRcHeight), pContext);
-	m_pOpt = (COprtView*)m_splt.GetPane(0,1);
+	m_splt.CreateView(0, 1, RUNTIME_CLASS(CInfoView), CSize(200, nRcHeight), pContext);
+	m_pInfoView = (CInfoView*)m_splt.GetPane(0,1);
+	//m_pOpt = (CInfoView*)m_splt.GetPane(0,1);
 	
 	m_splt.SetColumnInfo(0, rct.Width()-210, 500);
 	m_splt.SetColumnInfo(1,  200, 100);
@@ -262,7 +270,7 @@ void CMainFrame::SetMainFrm(int num)
 	m_pRBView->Invalidate(FALSE);
 	m_pSegView->Invalidate(FALSE);
 	m_pClassier->Invalidate(FALSE);
-	m_pInfoView->Invalidate(FALSE);
+	//m_pInfoView->Invalidate(FALSE);
 }
 
 
@@ -291,7 +299,6 @@ int CMainFrame::ResetFrm()
 	m_pRBView->Invalidate(FALSE);
 	m_pSegView->Invalidate(FALSE);
 	m_pClassier->Invalidate(FALSE);
-	m_pInfoView->Invalidate(FALSE);
 	return 0;
 }
 
@@ -344,8 +351,8 @@ void CMainFrame::OnBtnNextimg()
 	sOneImg img = m_ImgSerial.NextMatImg();
 	m_pRBView->SetImgData(img);
 	m_pInfoView->SetImgData(img);
-	//SetCurrent(m_ImgSerial.GetCurrentNum());
 }
+
 
 void CMainFrame::OnBtnLoadxml()
 {
@@ -383,12 +390,9 @@ void CMainFrame::OnBtnCamera()
 }
 
 
-
-
-
+//打开图像序列
 void CMainFrame::OnSerileOpen()
 {
-	AfxMessageBox("打开图像序列");
 	CFileDialog dlg(TRUE);								//文件打开对话框
 	CFileFind ff;										//文件查找类
 	CStringArray dcmPathstr;							//文件路径+文件名列表 dcm文件
@@ -415,13 +419,14 @@ void CMainFrame::OnSerileOpen()
 		strFileName = dcmPathstr.GetAt(i);				//从序列中取得文件路径
 		m_ImgSerial.LoadDcm(strFileName);				//加载Dcm文件
 	}
-	//SetSum(m_ImgSerial.GetImageNum());					//显示当前图像总数
+	//SetSum(m_ImgSerial.GetImageNum());				//显示当前图像总数
 	//SetCurrent(m_ImgSerial.GetCurrentNum());			//显示当前图像序号
 	sOneImg info = m_ImgSerial.GetCurrentMatImg();		//取得当前图像
-	m_pRBView->SetImgData(info);			//将图像设置到CRBDcm类中
+	m_pRBView->SetImgData(info);						//将图像设置到CRBDcm类中
 }
 
 
+//打开单张图像
 void CMainFrame::OnFileOpenOne()
 {
 	CFileDialog dlg(TRUE);								//文件打开对话框
@@ -436,5 +441,68 @@ void CMainFrame::OnFileOpenOne()
 	//SetSum(m_ImgSerial.GetImageNum());				//显示当前图像总数
 	//SetCurrent(m_ImgSerial.GetCurrentNum());			//显示当前图像序号
 	sOneImg info = m_ImgSerial.GetCurrentMatImg();		//序列中当前图像
-	m_pRBView->SetImgData(info);			//设置当前图像
+	m_pRBView->SetImgData(info);						//设置当前图像
+}
+
+
+void CMainFrame::OnBtnEntropy()
+{
+	AfxMessageBox("还没有移植过来额！");
+}
+
+
+void CMainFrame::OnBtnOtsu()
+{
+	CSegmentOperat seg;
+	sOneImg src = m_pRBView->GetOneImg();
+	cv::Mat m_dstImage = seg.OstuSeg(src.pixle.clone()).clone();
+	sOneImg info = m_ImgSerial.GetCurrentMatImg();
+	info.pixle = m_dstImage.clone();
+	m_pSegView->SetImgData(info);
+}
+
+
+void CMainFrame::OnBtnReallung()
+{
+	m_pSegView->SegRealLung(m_ImgSerial.GetCurrentMatImg().pixle.clone());
+}
+
+
+void CMainFrame::OnBtnNudoul()
+{
+	//(m_pMainFrm->m_pClassier)->SetImgData(img);
+	sOneImg img = (m_pClassier)->GetOneImg();				//获取结节窗中显示的图像，疑似结节的灰度图像
+	std::vector<std::vector<cv::Point>> contours;			//边界点集合
+	std::vector<cv::Vec4i> hierarchy;						//边界
+
+	cv::medianBlur(img.pixle, img.pixle,3);
+	findContours(img.pixle.clone(), contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+	drawContours(img.pixle, contours, -1, Scalar(255), CV_FILLED, 1, hierarchy);
+
+	sOneImg simg;	//肺实质窗口中的图像
+	(m_pSegView)->GetSegRealLungs(simg);
+	bitwise_and(simg.pixle, img.pixle, img.pixle);
+	COneImgFeatures features;
+	features.SetMatImgAndContours(img.pixle, contours);
+	features.CalculateFeatures();
+	namedWindow("aaa",CV_WINDOW_AUTOSIZE);									//显示分割后的结果
+	imshow("aaa",img.pixle);
+}
+
+
+void CMainFrame::OnBtnMom() //矩量
+{
+	sOneImg img;	//肺实质窗口中的图像
+	(m_pSegView)->GetSegRealLungs(img);
+	medianBlur(img.pixle, img.pixle, 3);
+	(m_pClassier)->SegNodules(img);
+}
+
+
+void CMainFrame::OnBtnMean()
+{
+	sOneImg img;
+	(m_pSegView)->GetSegRealLungs(img);
+	medianBlur(img.pixle, img.pixle, 3);
+	(m_pClassier)->SegNodulesMean(img);
 }

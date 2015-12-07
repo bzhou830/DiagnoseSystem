@@ -19,6 +19,10 @@
 #include "AllImgView.h"
 #include "MatImg.h"
 #include "SrcShowDlg.h"
+#include "SegmentOperat.h"
+#include "EnhanceOperat.h"
+#include "OneImgFeatures.h"
+
 
 const UINT UM_PROSSESS = WM_USER + 1;
 class COprtView;
@@ -86,5 +90,12 @@ public:
 	afx_msg void OnBtnCamera();
 	afx_msg void OnSerileOpen();
 	afx_msg void OnFileOpenOne();
+	afx_msg void OnBtnEntropy();
+	afx_msg void OnBtnOtsu();
+	afx_msg void OnBtnReallung();
+//	afx_msg void OnBtnNudoul();
+	afx_msg void OnBtnNudoul();
+	afx_msg void OnBtnMom();
+	afx_msg void OnBtnMean();
 };
 

@@ -616,7 +616,6 @@ void COprtView::OnBnClickedBtnMom()
 	(m_pMainFrm->m_pSegView)->GetSegRealLungs(img);
 	medianBlur(img.pixle, img.pixle, 3);
 	(m_pMainFrm->m_pClassier)->SegNodules(img);
-	
 	//(((CMainFrame*)AfxGetMainWnd())->m_pSegView)->GetSegRealLungs(img);
 	//(((CMainFrame*)AfxGetMainWnd())->m_pClassier)->SegNodules(img);
 }
