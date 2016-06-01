@@ -28,4 +28,4 @@ E-mail: bzhou830@qq.com
 
 
 ##License
-RBDcm计算机辅助诊断系统的代码使用MIT License发布，此外，禁止使用YaH3C以及YaH3C的修改程序用于商业目的（比如交叉编译到路由进行销售等行为）
+RBDcm计算机辅助诊断系统的代码使用MIT License发布，此外，禁止使用RBDcm计算机辅助诊断系统以及RBDcm计算机辅助诊断系统的修改程序用于商业目的（比如交叉编译到路由进行销售等行为）
