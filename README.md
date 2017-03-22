@@ -19,16 +19,15 @@
 
 ## 工作站界面：
 使用SVM分类器对横断面进行结节检测结果：
-<center>
+<center/>
 ![image](/images/raw/master/2015.png "断层面")
-</center>
 横断面，矢状面，冠状面三剖面下结节：
-<center>
-![image](/images/raw/master/face.png "平面重建")
-</center>
 
-##联系作者
+![image](/images/raw/master/face.png "平面重建")
+
+
+## 联系作者
 E-mail: bzhou830@qq.com
 
-##License
+## License
 RBDcm计算机辅助诊断系统的代码使用MIT License发布，此外，禁止使用RBDcm计算机辅助诊断系统以及RBDcm计算机辅助诊断系统的修改程序用于任何商业目的。
