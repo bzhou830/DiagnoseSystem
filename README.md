@@ -18,13 +18,14 @@
 7. 可选多种图像增强方式。
 
 ## 工作站界面：
-使用SVM分类器对横断面进行结节检测结果：
-<center/>
-![image](/images/raw/master/2015.png "断层面")
-横断面，矢状面，冠状面三剖面下结节：
 
-![image](/images/raw/master/face.png "平面重建")
+- 使用SVM分类器对横断面进行结节检测结果：
 
+![image](https://github.com/bzhou830/images/raw/master/2015.png "断层面")
+
+ - 横断面，矢状面，冠状面三剖面下结节：
+
+![image](https://github.com/bzhou830/images/raw/master/face.png "平面重建")
 
 ## 联系作者
 E-mail: bzhou830@qq.com
