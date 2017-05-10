@@ -35,7 +35,7 @@
 ### RBDcm第二版
 - Debug版本在1080P显示器上运行效果
 
-![image](https://github.com/bzhou830/images/raw/master/2015.png "断层面")
+![image](https://github.com/bzhou830/images/raw/master/v2.png "第二版界面")
 
 ### RBDcm第一版（2015.7 - 2016.4）
 - 使用SVM分类器对横断面进行结节检测结果：
