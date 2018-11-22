@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <ExecutablePath>d:\VTK6.0\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>d:\VTK6.0\include\vtk-6.0;$(IncludePath)</IncludePath>
+    <LibraryPath>d:\VTK6.0\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>vtkalglib-6.0.lib;vtkChartsCore-6.0.lib;vtkCommonColor-6.0.lib;vtkCommonComputationalGeometry-6.0.lib;vtkCommonCore-6.0.lib;vtkCommonDataModel-6.0.lib;vtkCommonExecutionModel-6.0.lib;vtkCommonMath-6.0.lib;vtkCommonMisc-6.0.lib;vtkCommonSystem-6.0.lib;vtkCommonTransforms-6.0.lib;vtkDICOMParser-6.0.lib;vtkDomainsChemistry-6.0.lib;vtkexoIIc-6.0.lib;vtkexpat-6.0.lib;vtkFiltersAMR-6.0.lib;vtkFiltersCore-6.0.lib;vtkFiltersExtraction-6.0.lib;vtkFiltersFlowPaths-6.0.lib;vtkFiltersGeneral-6.0.lib;vtkFiltersGeneric-6.0.lib;vtkFiltersGeometry-6.0.lib;vtkFiltersHybrid-6.0.lib;vtkFiltersHyperTree-6.0.lib;vtkFiltersImaging-6.0.lib;vtkFiltersModeling-6.0.lib;vtkFiltersParallel-6.0.lib;vtkFiltersParallelImaging-6.0.lib;vtkFiltersProgrammable-6.0.lib;vtkFiltersSelection-6.0.lib;vtkFiltersSources-6.0.lib;vtkFiltersStatistics-6.0.lib;vtkFiltersTexture-6.0.lib;vtkFiltersVerdict-6.0.lib;vtkfreetype-6.0.lib;vtkftgl-6.0.lib;vtkGeovisCore-6.0.lib;vtkgl2ps-6.0.lib;vtkGUISupportMFC-6.0.lib;vtkhdf5-6.0.lib;vtkhdf5_hl-6.0.lib;vtkImagingColor-6.0.lib;vtkImagingCore-6.0.lib;vtkImagingFourier-6.0.lib;vtkImagingGeneral-6.0.lib;vtkImagingHybrid-6.0.lib;vtkImagingMath-6.0.lib;vtkImagingMorphological-6.0.lib;vtkImagingSources-6.0.lib;vtkImagingStatistics-6.0.lib;vtkImagingStencil-6.0.lib;vtkInfovisCore-6.0.lib;vtkInfovisLayout-6.0.lib;vtkInteractionImage-6.0.lib;vtkInteractionStyle-6.0.lib;vtkInteractionWidgets-6.0.lib;vtkIOAMR-6.0.lib;vtkIOCore-6.0.lib;vtkIOEnSight-6.0.lib;vtkIOExodus-6.0.lib;vtkIOExport-6.0.lib;vtkIOGeometry-6.0.lib;vtkIOImage-6.0.lib;vtkIOImport-6.0.lib;vtkIOInfovis-6.0.lib;vtkIOLegacy-6.0.lib;vtkIOLSDyna-6.0.lib;vtkIOMINC-6.0.lib;vtkIOMovie-6.0.lib;vtkIONetCDF-6.0.lib;vtkIOParallel-6.0.lib;vtkIOPLY-6.0.lib;vtkIOSQL-6.0.lib;vtkIOVideo-6.0.lib;vtkIOXML-6.0.lib;vtkIOXMLParser-6.0.lib;vtkjpeg-6.0.lib;vtkjsoncpp-6.0.lib;vtklibxml2-6.0.lib;vtkLocalExample-6.0.lib;vtkmetaio-6.0.lib;vtkNetCDF-6.0.lib;vtkNetCDF_cxx-6.0.lib;vtkoggtheora-6.0.lib;vtkParallelCore-6.0.lib;vtkpng-6.0.lib;vtkproj4-6.0.lib;vtkRenderingAnnotation-6.0.lib;vtkRenderingContext2D-6.0.lib;vtkRenderingCore-6.0.lib;vtkRenderingFreeType-6.0.lib;vtkRenderingFreeTypeOpenGL-6.0.lib;vtkRenderingGL2PS-6.0.lib;vtkRenderingHybridOpenGL-6.0.lib;vtkRenderingImage-6.0.lib;vtkRenderingLabel-6.0.lib;vtkRenderingLOD-6.0.lib;vtkRenderingOpenGL-6.0.lib;vtkRenderingVolume-6.0.lib;vtkRenderingVolumeAMR-6.0.lib;vtkRenderingVolumeOpenGL-6.0.lib;vtksqlite-6.0.lib;vtksys-6.0.lib;vtkTestingGenericBridge-6.0.lib;vtkTestingIOSQL-6.0.lib;vtkTestingRendering-6.0.lib;vtktiff-6.0.lib;vtkverdict-6.0.lib;vtkViewsContext2D-6.0.lib;vtkViewsCore-6.0.lib;vtkViewsGeovis-6.0.lib;vtkViewsInfovis-6.0.lib;vtkzlib-6.0.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
